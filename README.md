@@ -1,1 +1,0 @@
-# chinese-school-teaching-app
