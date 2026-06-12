@@ -22,7 +22,7 @@ export default async function PhrasesPage({
       <section className="mx-auto max-w-6xl">
         <BackLink href={`/lesson/${id}`} label="Back to lesson" />
         <h1 className="mb-6 text-4xl font-bold text-red-700">Phrases 词组</h1>
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-4">
           {(phrases as Phrase[] | null)?.map((phrase) => (
             <ContentCard
               key={phrase.id}
