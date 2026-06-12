@@ -13,7 +13,9 @@ export default async function HomePage() {
     return (
       <main className="min-h-screen bg-orange-50 p-8">
         <h1 className="text-4xl font-bold text-red-700">Chinese Lessons</h1>
-        <p className="mt-4 rounded-2xl bg-white p-4 text-red-700 shadow">Error: {error.message}</p>
+        <p className="mt-4 rounded-2xl bg-white p-4 text-red-700 shadow">
+          Error: {error.message}
+        </p>
       </main>
     );
   }
@@ -25,9 +27,12 @@ export default async function HomePage() {
           <p className="mb-3 inline-block rounded-full bg-red-100 px-4 py-2 font-bold text-red-700">
             Chinese School App
           </p>
-          <h1 className="text-5xl font-extrabold text-gray-900 md:text-7xl">中文课</h1>
+          <h1 className="text-5xl font-extrabold text-gray-900 md:text-7xl">
+            中文课三年级
+          </h1>
           <p className="mt-4 max-w-2xl text-lg text-gray-600">
-            Choose a lesson and practise stories, characters, phrases, and short sentences.
+            Choose a lesson and practise stories, characters, phrases, and short
+            sentences.
           </p>
         </div>
 
@@ -51,7 +56,9 @@ export default async function HomePage() {
         {(!lessons || lessons.length === 0) && (
           <div className="rounded-3xl bg-white p-6 shadow">
             <h2 className="text-2xl font-bold">No lessons found</h2>
-            <p className="mt-2 text-gray-600">Run the SQL seed file in Supabase to add lessons.</p>
+            <p className="mt-2 text-gray-600">
+              Run the SQL seed file in Supabase to add lessons.
+            </p>
           </div>
         )}
 

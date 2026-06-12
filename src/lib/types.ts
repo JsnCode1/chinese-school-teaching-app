@@ -21,6 +21,12 @@ export type CharacterItem = {
   pinyin: string;
   meaning: string;
   example: string | null;
+
+  stroke_count: number | null;
+  radical: string | null;
+  structure: string | null;
+  stroke_order_note: string | null;
+  common_words: string[] | null;
 };
 
 export type Phrase = {

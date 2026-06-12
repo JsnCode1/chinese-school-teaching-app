@@ -3,7 +3,11 @@ import ContentCard from "@/components/ContentCard";
 import { supabase } from "@/lib/supabase";
 import type { Story } from "@/lib/types";
 
-export default async function StoryPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function StoryPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { id } = await params;
 
   const { data: stories, error } = await supabase
@@ -20,7 +24,12 @@ export default async function StoryPage({ params }: { params: Promise<{ id: stri
         <h1 className="mb-6 text-4xl font-bold text-red-700">Story 故事</h1>
         <div className="grid gap-6">
           {(stories as Story[] | null)?.map((story) => (
-            <ContentCard key={story.id} chinese={story.chinese_text} pinyin={story.pinyin} english={story.english_translation} />
+            <ContentCard
+              key={story.id}
+              chinese={story.chinese_text}
+              pinyin={story.pinyin}
+              english={story.english_translation}
+            />
           ))}
         </div>
       </section>
