@@ -5,9 +5,9 @@ import type { CharacterItem } from "@/lib/types";
 export default async function CharacterDetailPage({
   params,
 }: {
-  params: Promise<{ lessonId: string; characterId: string }>;
+  params: Promise<{ id: string; characterId: string }>;
 }) {
-  const { lessonId, characterId } = await params;
+  const { id, characterId } = await params;
 
   const { data: character, error } = await supabase
     .from("characters")
@@ -18,9 +18,7 @@ export default async function CharacterDetailPage({
   if (error || !character) {
     return (
       <main className="min-h-screen bg-orange-50 p-8">
-        <Link href={`/lesson/${lessonId}/characters`}>
-          ← Back to Characters
-        </Link>
+        <Link href={`/lesson/${id}/characters`}>← Back to Characters</Link>
 
         <p className="mt-6">Character not found.</p>
       </main>
@@ -32,7 +30,7 @@ export default async function CharacterDetailPage({
   return (
     <main className="min-h-screen bg-orange-50 p-8">
       <Link
-        href={`/lesson/${lessonId}/characters`}
+        href={`/lesson/${id}/characters`}
         className="text-red-600 font-bold"
       >
         ← Back to Characters
