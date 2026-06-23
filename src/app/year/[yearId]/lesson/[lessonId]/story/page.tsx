@@ -8,6 +8,11 @@ export default async function StoryPage({
   params: Promise<{ yearId: string; lessonId: string }>;
 }) {
   const { yearId, lessonId } = await params;
+  const { data: lesson } = await supabase
+    .from("lessons")
+    .select("title")
+    .eq("id", lessonId)
+    .single();
 
   const { data: stories, error } = await supabase
     .from("stories")
@@ -26,7 +31,17 @@ export default async function StoryPage({
           label="Back to lesson"
         />
 
-        <h1 className="mb-8 text-5xl font-bold text-red-700">课文 上餐馆</h1>
+        <div className="mb-8 flex items-center gap-4 flex-wrap">
+          <h1 className="text-5xl font-bold text-red-700">
+            课文 《{lesson?.title}》
+          </h1>
+
+          {stories?.[0]?.page_number && (
+            <span className="rounded-full bg-blue-100 px-5 py-2 text-xl font-bold text-blue-700 shadow">
+              第 {stories[0].page_number} 页
+            </span>
+          )}
+        </div>
 
         <div className="space-y-8">
           {stories?.map((story: Story) => {
