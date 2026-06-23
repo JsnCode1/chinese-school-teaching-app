@@ -1,5 +1,14 @@
+export type Year = {
+  id: string;
+  year_number: number;
+  title: string;
+  description: string | null;
+  created_at: string;
+};
+
 export type Lesson = {
   id: string;
+  year_id: string;
   lesson_number: number;
   title: string;
   description: string;

@@ -1,10 +1,16 @@
 import Link from "next/link";
 import type { Lesson } from "@/lib/types";
 
-export default function LessonCard({ lesson }: { lesson: Lesson }) {
+export default function LessonCard({
+  lesson,
+  yearId,
+}: {
+  lesson: Lesson;
+  yearId: string;
+}) {
   return (
     <Link
-      href={`/lesson/${lesson.id}`}
+      href={`/year/${yearId}/lesson/${lesson.id}`}
       className="group block rounded-3xl border-2 border-orange-200 bg-white p-6 shadow-md transition hover:-translate-y-1 hover:border-red-400 hover:shadow-xl"
     >
       <div className="mb-4 inline-flex rounded-full bg-red-100 px-4 py-2 text-sm font-bold text-red-700">

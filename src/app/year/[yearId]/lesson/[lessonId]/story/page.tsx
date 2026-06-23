@@ -5,14 +5,14 @@ import type { Story } from "@/lib/types";
 export default async function StoryPage({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ yearId: string; lessonId: string }>;
 }) {
-  const { id } = await params;
+  const { yearId, lessonId } = await params;
 
   const { data: stories, error } = await supabase
     .from("stories")
     .select("*")
-    .eq("lesson_id", id);
+    .eq("lesson_id", lessonId);
 
   if (error) {
     return <main className="p-8">Error loading story: {error.message}</main>;
@@ -21,7 +21,10 @@ export default async function StoryPage({
   return (
     <main className="min-h-screen bg-orange-50 p-6 md:p-10">
       <section className="mx-auto max-w-5xl">
-        <BackLink href={`/lesson/${id}`} label="Back to lesson" />
+        <BackLink
+          href={`/year/${yearId}/lesson/${lessonId}`}
+          label="Back to lesson"
+        />
 
         <h1 className="mb-8 text-5xl font-bold text-red-700">课文 上餐馆</h1>
 
@@ -29,7 +32,6 @@ export default async function StoryPage({
           {stories?.map((story: Story) => {
             const chineseChars = story.chinese_text.split("");
             const pinyinWords = story.pinyin?.split(" ") ?? [];
-
             let pinyinIndex = 0;
 
             return (
@@ -37,7 +39,6 @@ export default async function StoryPage({
                 key={story.id}
                 className="rounded-3xl bg-white p-8 shadow-lg"
               >
-                {/* Chinese characters with pinyin ABOVE */}
                 <div className="flex flex-wrap gap-4">
                   {chineseChars.map((char, index) => {
                     const isPunctuation = "，。！？；：,.!?;:（）() ".includes(
@@ -51,7 +52,7 @@ export default async function StoryPage({
                     return (
                       <div key={index} className="flex flex-col items-center">
                         {!isPunctuation && (
-                          <span className="text-sm text-red-600 font-medium">
+                          <span className="text-sm font-medium text-red-600">
                             {pinyin}
                           </span>
                         )}
@@ -64,10 +65,9 @@ export default async function StoryPage({
                   })}
                 </div>
 
-                {/* English translation */}
                 <div className="mt-10 rounded-2xl bg-green-50 p-4">
                   <h2 className="mb-2 text-lg font-bold text-green-700">
-                    英文翻译 CAN BE ADDED LATER
+                    English Translation
                   </h2>
 
                   <p className="text-lg text-gray-700">
