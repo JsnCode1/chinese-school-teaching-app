@@ -86,7 +86,7 @@ export default function PinyinMatchGame({
   const total = characters.length;
 
   return (
-    <div className="h-[calc(100vh-180px)] overflow-hidden">
+    <div className="min-h-[calc(100vh-180px)]">
       <div className="mb-3 flex items-center justify-between rounded-2xl bg-white px-5 py-3 shadow">
         <div>
           <h2 className="text-2xl font-extrabold text-gray-900">
@@ -117,7 +117,7 @@ export default function PinyinMatchGame({
         </div>
       </div>
 
-      <div className="grid h-[calc(100%-90px)] grid-cols-1 gap-4 lg:grid-cols-[2fr_1fr]">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[2fr_1fr]">
         <section className="overflow-hidden rounded-3xl bg-white p-4 shadow">
           <h3 className="mb-3 text-xl font-bold text-gray-900">
             Drop characters here

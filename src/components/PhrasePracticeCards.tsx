@@ -65,7 +65,7 @@ export default function PhrasePracticeCards({
             >
               {isFlipped ? (
                 <div>
-                  <p className="text-lg font-bold text-red-700">Answer</p>
+                  <p className="text-lg font-bold text-red-700">《答案》</p>
                   <p className="mt-3 text-3xl font-bold">
                     {phrase.chinese_text}
                   </p>
