@@ -76,6 +76,12 @@ export default async function LessonOverviewPage({
             href={`/year/${yearId}/lesson/${lessonId}/sentences`}
             emoji="句子"
           />
+          <OptionCard
+            title="Games"
+            description="Match pinyin to the correct Chinese characters."
+            href={`/year/${yearId}/lesson/${lessonId}/games`}
+            emoji="游戏"
+          />
         </div>
       </section>
     </main>
