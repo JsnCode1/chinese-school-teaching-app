@@ -70,11 +70,7 @@ export default function InteractiveStoryText({ chineseText, pinyin }: Props) {
                 return (
                   <span
                     key={`${sentenceIndex}-${charIndex}`}
-                    className={`text-3xl font-bold text-gray-900 ${
-                      isActive
-                        ? "underline decoration-red-500 decoration-4 underline-offset-8"
-                        : ""
-                    }`}
+                    className="text-3xl font-bold text-gray-900"
                   >
                     {char}
                   </span>
