@@ -19,11 +19,49 @@ export default function PinyinMatchGame({
   );
   const [pinyinBoxes, setPinyinBoxes] = useState<CharacterItem[]>([]);
   const [hanziCards, setHanziCards] = useState<CharacterItem[]>([]);
+  const [selectedCharacterId, setSelectedCharacterId] = useState<string | null>(
+    null,
+  );
 
   useEffect(() => {
     setPinyinBoxes(shuffleArray(characters));
     setHanziCards(shuffleArray(characters));
   }, [characters]);
+
+  function checkMatch(characterId: string, targetId: string) {
+    if (!characterId) return;
+
+    if (characterId === targetId) {
+      setMatches((current) => ({
+        ...current,
+        [targetId]: characterId,
+      }));
+
+      setFeedback((current) => ({
+        ...current,
+        [targetId]: "correct",
+      }));
+
+      setMessage("对了！");
+    } else {
+      setFeedback((current) => ({
+        ...current,
+        [targetId]: "wrong",
+      }));
+
+      setMessage("再试试！");
+
+      setTimeout(() => {
+        setFeedback((current) => {
+          const updated = { ...current };
+          delete updated[targetId];
+          return updated;
+        });
+      }, 1000);
+    }
+
+    setSelectedCharacterId(null);
+  }
 
   function handleDragStart(
     event: React.DragEvent<HTMLButtonElement>,
@@ -40,42 +78,14 @@ export default function PinyinMatchGame({
 
     const draggedCharacterId = event.dataTransfer.getData("characterId");
 
-    if (!draggedCharacterId) return;
-
-    if (draggedCharacterId === pinyinCharacterId) {
-      setMatches((current) => ({
-        ...current,
-        [pinyinCharacterId]: draggedCharacterId,
-      }));
-
-      setFeedback((current) => ({
-        ...current,
-        [pinyinCharacterId]: "correct",
-      }));
-
-      setMessage("对了！");
-    } else {
-      setFeedback((current) => ({
-        ...current,
-        [pinyinCharacterId]: "wrong",
-      }));
-
-      setMessage("在试试！");
-
-      setTimeout(() => {
-        setFeedback((current) => {
-          const updated = { ...current };
-          delete updated[pinyinCharacterId];
-          return updated;
-        });
-      }, 1000);
-    }
+    checkMatch(draggedCharacterId, pinyinCharacterId);
   }
 
   function resetGame() {
     setMatches({});
     setMessage("");
     setFeedback({});
+    setSelectedCharacterId(null);
 
     setPinyinBoxes(shuffleArray(characters));
     setHanziCards(shuffleArray(characters));
@@ -93,7 +103,7 @@ export default function PinyinMatchGame({
             Pinyin Match Game
           </h2>
           <p className="text-sm text-gray-600">
-            Drag each character to the correct pinyin.
+            Drag a character or tap a character, then tap the matching pinyin.
           </p>
         </div>
 
@@ -118,12 +128,12 @@ export default function PinyinMatchGame({
       </div>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-[2fr_1fr]">
-        <section className="overflow-hidden rounded-3xl bg-white p-4 shadow">
+        <section className="rounded-3xl bg-white p-4 shadow">
           <h3 className="mb-3 text-xl font-bold text-gray-900">
             Drop characters here
           </h3>
 
-          <div className="grid h-[calc(100%-40px)] grid-cols-3 gap-3">
+          <div className="grid grid-cols-2 gap-3">
             {pinyinBoxes.map((item) => {
               const matchedCharacterId = matches[item.id];
               const matchedCharacter = characters.find(
@@ -135,21 +145,26 @@ export default function PinyinMatchGame({
                   key={item.id}
                   onDragOver={(event) => event.preventDefault()}
                   onDrop={(event) => handleDrop(event, item.id)}
-                  className={`rounded-2xl border-2 p-2 text-center transition-all duration-300 ${
+                  onClick={() => {
+                    if (selectedCharacterId) {
+                      checkMatch(selectedCharacterId, item.id);
+                    }
+                  }}
+                  className={`rounded-2xl border-2 p-3 text-center transition-all ${
                     feedback[item.id] === "wrong"
                       ? "border-red-500 bg-red-100"
                       : feedback[item.id] === "correct"
                         ? "border-green-500 bg-green-100"
                         : matchedCharacter
                           ? "border-green-300 bg-green-50"
-                          : "border-dashed border-blue-200 bg-orange-50"
+                          : "border-dashed border-blue-200 bg-orange-50 hover:border-blue-400"
                   }`}
                 >
                   <p className="text-xl font-extrabold text-gray-900">
                     {item.pinyin}
                   </p>
 
-                  <div className="mt-1 flex h-16 items-center justify-center rounded-xl bg-white">
+                  <div className="mt-2 flex h-14 items-center justify-center rounded-xl bg-white">
                     {matchedCharacter ? (
                       <span className="text-4xl font-extrabold text-red-600">
                         {matchedCharacter.character}
@@ -166,7 +181,7 @@ export default function PinyinMatchGame({
           </div>
         </section>
 
-        <section className="overflow-hidden rounded-3xl bg-white p-4 shadow">
+        <section className="rounded-3xl bg-white p-4 shadow">
           <h3 className="mb-3 text-xl font-bold text-red-700">
             Drag characters
           </h3>
@@ -174,6 +189,8 @@ export default function PinyinMatchGame({
           <div className="grid grid-cols-3 gap-3">
             {hanziCards.map((item) => {
               const alreadyMatched = matchedCharacterIds.includes(item.id);
+              const isSelected = selectedCharacterId === item.id;
+
               if (alreadyMatched) return null;
 
               return (
@@ -181,7 +198,12 @@ export default function PinyinMatchGame({
                   key={item.id}
                   draggable
                   onDragStart={(event) => handleDragStart(event, item.id)}
-                  className="cursor-grab rounded-2xl border-2 border-red-100 bg-red-50 p-3 text-4xl font-extrabold text-red-600 shadow hover:bg-white"
+                  onClick={() => setSelectedCharacterId(item.id)}
+                  className={`cursor-grab rounded-2xl border-2 p-3 text-4xl font-extrabold shadow transition hover:bg-white ${
+                    isSelected
+                      ? "border-blue-500 bg-blue-100 text-blue-700"
+                      : "border-red-100 bg-red-50 text-red-600"
+                  }`}
                 >
                   {item.character}
                 </button>
