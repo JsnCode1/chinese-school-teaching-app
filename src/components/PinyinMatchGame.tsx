@@ -133,7 +133,7 @@ export default function PinyinMatchGame({
             Drop characters here
           </h3>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-3 gap-2 xl:grid-cols-5">
             {pinyinBoxes.map((item) => {
               const matchedCharacterId = matches[item.id];
               const matchedCharacter = characters.find(
@@ -150,7 +150,7 @@ export default function PinyinMatchGame({
                       checkMatch(selectedCharacterId, item.id);
                     }
                   }}
-                  className={`rounded-2xl border-2 p-3 text-center transition-all ${
+                  className={`h-28 flex flex-col justify-between rounded-xl border-2 p-3 transition-all ${
                     feedback[item.id] === "wrong"
                       ? "border-red-500 bg-red-100"
                       : feedback[item.id] === "correct"
@@ -164,9 +164,9 @@ export default function PinyinMatchGame({
                     {item.pinyin}
                   </p>
 
-                  <div className="mt-2 flex h-14 items-center justify-center rounded-xl bg-white">
+                  <div className="mt-1 flex h-14 items-center justify-center rounded-xl bg-white">
                     {matchedCharacter ? (
-                      <span className="text-4xl font-extrabold text-red-600">
+                      <span className="text-3xl font-extrabold text-red-600">
                         {matchedCharacter.character}
                       </span>
                     ) : (
@@ -186,7 +186,7 @@ export default function PinyinMatchGame({
             Drag characters
           </h3>
 
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-3 gap-4">
             {hanziCards.map((item) => {
               const alreadyMatched = matchedCharacterIds.includes(item.id);
               const isSelected = selectedCharacterId === item.id;

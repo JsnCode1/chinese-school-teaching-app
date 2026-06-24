@@ -27,6 +27,30 @@ export default function CharacterPopup({ character, onClose }: Props) {
     return "Choose an option";
   }
 
+  function speakChinese(text: string) {
+    const utterance = new SpeechSynthesisUtterance(text);
+
+    const voices = window.speechSynthesis.getVoices();
+
+    // Try to find a preferred female Chinese voice
+    const preferredVoice =
+      voices.find(
+        (voice) =>
+          voice.name.includes("Tingting") || voice.name.includes("Xiaoxiao"),
+      ) || voices.find((voice) => voice.lang === "zh-CN");
+
+    if (preferredVoice) {
+      utterance.voice = preferredVoice;
+    }
+
+    utterance.lang = "zh-CN";
+
+    utterance.rate = 0.2; // Adjust the rate for slower speech
+
+    window.speechSynthesis.cancel();
+
+    window.speechSynthesis.speak(utterance);
+  }
   return (
     <div
       onClick={onClose}
@@ -78,6 +102,13 @@ export default function CharacterPopup({ character, onClose }: Props) {
             className={buttonClass}
           >
             拼音
+          </button>
+
+          <button
+            onClick={() => speakChinese(character.character)}
+            className={buttonClass}
+          >
+            朗读
           </button>
 
           <button

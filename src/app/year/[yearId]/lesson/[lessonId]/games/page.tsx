@@ -21,7 +21,7 @@ export default async function GamesPage({
 
   return (
     <main className="min-h-screen bg-orange-50 p-6 md:p-10">
-      <section className="mx-auto max-w-6xl">
+      <section className="mx-auto max-w-[95vw]">
         <BackLink
           href={`/year/${yearId}/lesson/${lessonId}`}
           label="Back to lesson"
