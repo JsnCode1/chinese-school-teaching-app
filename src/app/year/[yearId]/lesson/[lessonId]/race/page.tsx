@@ -15,6 +15,13 @@ export default async function RacePage({
     .select("*")
     .eq("lesson_id", lessonId);
 
+  const { data: story } = await supabase
+    .from("stories")
+    .select("image_path")
+    .eq("lesson_id", lessonId)
+    .limit(1)
+    .single();
+
   if (error) {
     return <main className="p-8">Error loading race: {error.message}</main>;
   }
@@ -27,7 +34,10 @@ export default async function RacePage({
           label="Back to lesson"
         />
 
-        <PinyinRaceGame characters={(characters as CharacterItem[]) ?? []} />
+        <PinyinRaceGame
+          characters={(characters as CharacterItem[]) ?? []}
+          backgroundImage={story?.image_path}
+        />
       </section>
     </main>
   );

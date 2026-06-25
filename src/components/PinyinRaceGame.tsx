@@ -1,5 +1,6 @@
-//ctrl f search:
-//  speed = SPEED CONTROL
+// ctrl f search:
+// speed = SPEED CONTROL
+// image = BACKGROUND IMAGE
 
 "use client";
 
@@ -17,8 +18,10 @@ const BOT_TICK_MS = 1800; // SPEED CONTROL: smaller = bot moves more often
 
 export default function PinyinRaceGame({
   characters,
+  backgroundImage,
 }: {
   characters: CharacterItem[];
+  backgroundImage?: string | null;
 }) {
   const [question, setQuestion] = useState<CharacterItem | null>(null);
   const [choices, setChoices] = useState<CharacterItem[]>([]);
@@ -162,101 +165,113 @@ export default function PinyinRaceGame({
   }
 
   return (
-    <div className="rounded-[2rem] bg-white p-6 shadow-xl">
-      <div className="mb-5 flex items-center justify-between gap-4">
-        <div>
-          <h1 className="text-5xl font-extrabold text-red-700">赛车游戏</h1>
-          <p className="mt-2 text-lg font-semibold text-gray-600">
-            选择正确的汉字，赢过敌人！
-          </p>
+    <div className="relative min-h-[760px] overflow-hidden rounded-[2rem] bg-white p-8 shadow-xl">
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          backgroundImage: `linear-gradient(to right, rgba(255,255,255,0.98) 0%, rgba(255,255,255,0.92) 38%, rgba(255,255,255,0.55) 62%, rgba(255,255,255,0.18) 100%), url(${backgroundImage ?? "/story-images/default.png"})`,
+          backgroundSize: "cover",
+          backgroundPosition: "right center",
+          backgroundRepeat: "no-repeat",
+        }}
+      />
+
+      <div className="relative z-10 max-w-[720px]">
+        <div className="mb-8 flex items-start justify-between gap-4">
+          <div>
+            <h1 className="text-5xl font-extrabold text-red-700">赛车游戏</h1>
+            <p className="mt-2 text-xl font-semibold text-gray-700">
+              选择正确的汉字，赢过敌人！
+            </p>
+          </div>
+
+          {gameStarted && (
+            <button
+              onClick={startGame}
+              className="shrink-0 rounded-2xl bg-red-600 px-7 py-4 text-xl font-bold text-white shadow-lg transition hover:bg-red-700"
+            >
+              重新开始
+            </button>
+          )}
         </div>
 
-        {gameStarted && (
-          <button
-            onClick={startGame}
-            className="rounded-full bg-red-600 px-6 py-3 text-xl font-bold text-white shadow transition hover:bg-red-700"
-          >
-            重新开始
-          </button>
+        {!gameStarted ? (
+          <div className="flex min-h-[520px] flex-col items-center justify-center rounded-[2rem] bg-white/80 p-10 text-center shadow backdrop-blur-sm">
+            <div className="inline-block scale-x-[-1] text-8xl">🏎️</div>
+
+            <h2 className="mt-6 text-5xl font-extrabold text-gray-900">
+              准备好了吗？
+            </h2>
+
+            <p className="mt-4 max-w-xl text-xl font-semibold text-gray-700">
+              看拼音，选正确的汉字。答对你的车会往前跑。
+            </p>
+
+            <button
+              onClick={startGame}
+              className="mt-8 rounded-full bg-red-600 px-10 py-5 text-3xl font-extrabold text-white shadow-lg transition hover:scale-105 hover:bg-red-700"
+            >
+              开始
+            </button>
+          </div>
+        ) : (
+          <div className="space-y-6">
+            <div className="rounded-3xl bg-blue-50/90 p-5 shadow backdrop-blur-sm">
+              <div className="mb-3 flex items-center justify-between text-2xl font-extrabold text-blue-700">
+                <span>
+                  问题 {answeredCount}/{totalQuestions}
+                </span>
+                <span>{Math.round(questionProgress)}%</span>
+              </div>
+
+              <div className="h-4 overflow-hidden rounded-full bg-white shadow-inner">
+                <div
+                  className="h-full rounded-full bg-blue-600 transition-all duration-500"
+                  style={{ width: `${questionProgress}%` }}
+                />
+              </div>
+            </div>
+
+            <div className="space-y-4 rounded-[2rem] bg-white/85 p-5 shadow backdrop-blur-sm">
+              <RaceTrack label="你" emoji="🏎️" progress={playerProgress} />
+              <RaceTrack label="敌人" emoji="🚗" progress={botProgress} />
+            </div>
+
+            <div
+              className={`rounded-[2rem] border p-6 text-center shadow backdrop-blur-sm transition ${
+                lastAnswer === "correct"
+                  ? "border-green-200 bg-green-50/90"
+                  : lastAnswer === "wrong"
+                    ? "border-red-200 bg-red-50/90"
+                    : "border-yellow-200 bg-yellow-50/90"
+              }`}
+            >
+              <p className="text-xl font-extrabold text-gray-600">
+                选择正确的汉字
+              </p>
+
+              <p className="mt-3 text-7xl font-extrabold text-blue-700">
+                {question?.pinyin ?? "Ready?"}
+              </p>
+
+              <p className="mt-3 text-xl font-bold text-gray-700">{message}</p>
+            </div>
+
+            <div className="grid grid-cols-3 gap-5">
+              {choices.map((choice) => (
+                <button
+                  key={choice.id}
+                  onClick={() => chooseAnswer(choice)}
+                  disabled={!gameStarted || gameOver}
+                  className="rounded-[2rem] border-2 border-red-200 bg-white/90 p-8 text-7xl font-extrabold text-red-600 shadow-md backdrop-blur-sm transition hover:scale-105 hover:bg-white disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {choice.character}
+                </button>
+              ))}
+            </div>
+          </div>
         )}
       </div>
-
-      {!gameStarted ? (
-        <div className="flex min-h-[520px] flex-col items-center justify-center rounded-[2rem] bg-gradient-to-br from-yellow-50 to-red-50 p-10 text-center">
-          <div className="text-8xl inline-block transform scale-x-[-1]">🏎️</div>
-
-          <h2 className="mt-6 text-5xl font-extrabold text-gray-900">
-            准备好了吗？
-          </h2>
-
-          <p className="mt-4 max-w-xl text-xl font-semibold text-gray-600">
-            看拼音，选正确的汉字。答对你的车会往前跑。
-          </p>
-
-          <button
-            onClick={startGame}
-            className="mt-8 rounded-full bg-red-600 px-10 py-5 text-3xl font-extrabold text-white shadow-lg transition hover:scale-105 hover:bg-red-700"
-          >
-            开始
-          </button>
-        </div>
-      ) : (
-        <div className="space-y-5">
-          <div className="rounded-3xl bg-blue-50 p-4">
-            <div className="mb-2 flex items-center justify-between text-xl font-extrabold text-blue-700">
-              <span>
-                问题 {answeredCount}/{totalQuestions}
-              </span>
-              <span>{Math.round(questionProgress)}%</span>
-            </div>
-
-            <div className="h-4 overflow-hidden rounded-full bg-white">
-              <div
-                className="h-full rounded-full bg-blue-600 transition-all duration-500"
-                style={{ width: `${questionProgress}%` }}
-              />
-            </div>
-          </div>
-
-          <div className="space-y-4 rounded-[2rem] bg-gray-50 p-5">
-            <RaceTrack label="你" emoji="🏎️" progress={playerProgress} />
-            <RaceTrack label="敌人" emoji="🚗" progress={botProgress} />
-          </div>
-
-          <div
-            className={`rounded-[2rem] p-6 text-center transition ${
-              lastAnswer === "correct"
-                ? "bg-green-50"
-                : lastAnswer === "wrong"
-                  ? "bg-red-50"
-                  : "bg-yellow-50"
-            }`}
-          >
-            <p className="text-xl font-extrabold text-gray-500">
-              选择正确的汉字
-            </p>
-
-            <p className="mt-3 text-7xl font-extrabold text-blue-700">
-              {question?.pinyin ?? "Ready?"}
-            </p>
-
-            <p className="mt-3 text-xl font-bold text-gray-700">{message}</p>
-          </div>
-
-          <div className="grid grid-cols-3 gap-5">
-            {choices.map((choice) => (
-              <button
-                key={choice.id}
-                onClick={() => chooseAnswer(choice)}
-                disabled={!gameStarted || gameOver}
-                className="rounded-[2rem] border-2 border-red-100 bg-red-50 p-8 text-7xl font-extrabold text-red-600 shadow-md transition hover:scale-105 hover:bg-white disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                {choice.character}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   );
 }
@@ -273,33 +288,31 @@ function RaceTrack({
   const safeProgress = Math.min(Math.max(progress, 0), 100);
 
   return (
-    <div className="space-y-2">
-      <div className="flex items-center justify-between text-lg font-bold text-gray-700">
-        <span>{label}</span>
-        <span>{Math.round(safeProgress)}%</span>
-      </div>
+    <div className="grid grid-cols-[4rem_1fr_4rem_2rem] items-center gap-3">
+      <span className="text-2xl font-extrabold text-gray-800">{label}</span>
 
-      <div className="relative h-14 w-full overflow-hidden rounded-2xl bg-gray-200 p-1">
+      <div className="relative h-10 overflow-hidden rounded-full bg-gray-200 shadow-inner">
         <div
-          className="absolute inset-y-1 left-1 rounded-2xl bg-red-100 transition-all duration-500"
-          style={{
-            width: `calc(${safeProgress}% - 0.5rem)`,
-          }}
+          className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-red-200 to-red-300 transition-all duration-500"
+          style={{ width: `${safeProgress}%` }}
         />
 
-        <div className="absolute right-3 top-1/2 z-20 -translate-y-1/2 text-3xl">
-          🏁
-        </div>
-
         <div
-          className="absolute top-1/2 z-30 -translate-y-1/2 text-4xl transition-all duration-500 ease-out"
+          className="absolute top-1/2 z-20 text-3xl transition-all duration-500 ease-out"
           style={{
-            left: `calc(${safeProgress}% * 0.94 + 0.5rem)`,
+            left: `clamp(1rem, calc(${safeProgress}% - 1rem), calc(100% - 2.5rem))`,
+            transform: "translateY(-50%)",
           }}
         >
-          <span className="inline-block -scale-x-100">{emoji}</span>
+          <span className="inline-block scale-x-[-1]">{emoji}</span>
         </div>
       </div>
+
+      <span className="text-xl font-bold text-gray-700">
+        {Math.round(safeProgress)}%
+      </span>
+
+      <span className="text-2xl">🏁</span>
     </div>
   );
 }
