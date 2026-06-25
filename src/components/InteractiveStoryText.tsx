@@ -41,13 +41,29 @@ export default function InteractiveStoryText({ chineseText, pinyin }: Props) {
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = "zh-CN";
 
-    utterance.rate = 0.7;
+    utterance.rate = 0.85;
 
     // Find authentic native Chinese voices from the cached state array
     const preferredVoice =
+      // Look for modern natural AI/Neural voices first
       voices.find(
-        (v) => v.name.includes("Tingting") || v.name.includes("Xiaoxiao"),
-      ) || voices.find((v) => v.lang === "zh-CN" || v.lang.startsWith("zh-"));
+        (v) =>
+          v.name.includes("Xiaoxiao") ||
+          v.name.includes("Meijia") ||
+          v.name.includes("Yaoyao"),
+      ) ||
+      // Look for reliable premium native platform voices
+      voices.find(
+        (v) =>
+          v.name.includes("Tingting") ||
+          v.name.includes("Google 普通话") ||
+          v.name.includes("Google 國語") ||
+          v.name.includes("Huihui"),
+      ) ||
+      // Fallback to any general mainland Chinese engine
+      voices.find((v) => v.lang === "zh-CN") ||
+      // Universal fallback to any Chinese language tag variant (zh-TW, zh-SG, zh-HK)
+      voices.find((v) => v.lang.startsWith("zh-"));
 
     if (preferredVoice) {
       utterance.voice = preferredVoice;
