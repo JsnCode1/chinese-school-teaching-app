@@ -80,7 +80,13 @@ export default async function LessonOverviewPage({
             title="Games"
             description="Match pinyin to the correct Chinese characters."
             href={`/year/${yearId}/lesson/${lessonId}/games`}
-            emoji="游戏"
+            emoji="对一对"
+          />
+          <OptionCard
+            title="Racing Game"
+            description="Race the bot by choosing the correct character."
+            href={`/year/${yearId}/lesson/${lessonId}/race`}
+            emoji="赛车"
           />
         </div>
       </section>
