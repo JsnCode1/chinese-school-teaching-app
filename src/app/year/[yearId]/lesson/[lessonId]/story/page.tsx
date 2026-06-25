@@ -9,6 +9,7 @@ export default async function StoryPage({
   params: Promise<{ yearId: string; lessonId: string }>;
 }) {
   const { yearId, lessonId } = await params;
+
   const { data: lesson } = await supabase
     .from("lessons")
     .select("title")
@@ -46,20 +47,37 @@ export default async function StoryPage({
 
         <div className="space-y-8">
           {(stories as Story[] | null)?.map((story) => (
-            <div key={story.id} className="rounded-3xl bg-white p-8 shadow-lg">
-              <InteractiveStoryText
-                chineseText={story.chinese_text}
-                pinyin={story.pinyin}
-              />
+            <div
+              key={story.id}
+              className="relative overflow-hidden rounded-3xl bg-white p-8 shadow-lg"
+            >
+              {story.image_path && (
+                <div
+                  className="absolute inset-0 opacity-25"
+                  style={{
+                    backgroundImage: `url(${story.image_path})`,
+                    backgroundSize: "contain",
+                    backgroundPosition: "right center",
+                    backgroundRepeat: "no-repeat",
+                  }}
+                />
+              )}
 
-              <div className="mt-10 rounded-2xl bg-green-50 p-4">
-                <h2 className="mb-2 text-lg font-bold text-green-700">
-                  English Translation
-                </h2>
+              <div className="relative z-10">
+                <InteractiveStoryText
+                  chineseText={story.chinese_text}
+                  pinyin={story.pinyin}
+                />
 
-                <p className="text-lg text-gray-700">
-                  {story.english_translation}
-                </p>
+                <div className="mt-10 rounded-2xl bg-green-50 p-4">
+                  <h2 className="mb-2 text-lg font-bold text-green-700">
+                    English Translation
+                  </h2>
+
+                  <p className="text-lg text-gray-700">
+                    {story.english_translation}
+                  </p>
+                </div>
               </div>
             </div>
           ))}

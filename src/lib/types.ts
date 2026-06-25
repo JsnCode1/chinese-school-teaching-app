@@ -21,6 +21,8 @@ export type Story = {
   chinese_text: string;
   pinyin: string | null;
   english_translation: string | null;
+  page_numer: number | null;
+  image_path?: string | null;
 };
 
 export type CharacterItem = {
