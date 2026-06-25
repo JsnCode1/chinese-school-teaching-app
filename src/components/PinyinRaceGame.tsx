@@ -12,8 +12,8 @@ function shuffleArray<T>(array: T[]) {
 
 const QUESTIONS_PER_GAME = 10;
 const PLAYER_PROGRESS_PER_CORRECT = 100 / QUESTIONS_PER_GAME;
-const BOT_PROGRESS_PER_TICK = 4;
-const BOT_TICK_MS = 1800;
+const BOT_PROGRESS_PER_TICK = 4; // SPEED CONTROL: bigger = bot moves more each tick
+const BOT_TICK_MS = 1800; // SPEED CONTROL: smaller = bot moves more often
 
 export default function PinyinRaceGame({
   characters,
@@ -32,16 +32,20 @@ export default function PinyinRaceGame({
   const [lastAnswer, setLastAnswer] = useState<"correct" | "wrong" | null>(
     null,
   );
+  const [questionPool, setQuestionPool] = useState<CharacterItem[]>([]);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
-  const totalQuestions = Math.min(QUESTIONS_PER_GAME, characters.length);
+  const totalQuestions =
+    questionPool.length || Math.min(QUESTIONS_PER_GAME, characters.length);
+
   const questionProgress = totalQuestions
     ? (answeredCount / totalQuestions) * 100
     : 0;
 
-  function makeQuestion() {
-    if (characters.length < 3) return;
+  function makeQuestion(pool: CharacterItem[], index: number) {
+    const correct = pool[index];
 
-    const correct = characters[Math.floor(Math.random() * characters.length)];
+    if (!correct) return;
 
     const wrongChoices = shuffleArray(
       characters.filter((item) => item.id !== correct.id),
@@ -72,15 +76,23 @@ export default function PinyinRaceGame({
   }, [gameStarted, raceMoving, gameOver]);
 
   function startGame() {
+    const newQuestionPool = shuffleArray(characters).slice(
+      0,
+      QUESTIONS_PER_GAME,
+    );
+
     setPlayerProgress(0);
     setBotProgress(0);
     setAnsweredCount(0);
+    setQuestionPool(newQuestionPool);
+    setCurrentQuestionIndex(0);
     setGameOver(false);
     setGameStarted(true);
     setRaceMoving(false);
     setLastAnswer(null);
     setMessage("选择正确的汉字！");
-    makeQuestion();
+
+    makeQuestion(newQuestionPool, 0);
   }
 
   function chooseAnswer(choice: CharacterItem) {
@@ -98,7 +110,11 @@ export default function PinyinRaceGame({
 
     if (isCorrect) {
       setPlayerProgress(nextPlayerProgress);
+      setLastAnswer("correct");
       setMessage("对了！加油！");
+
+      const nextAnsweredCount = answeredCount + 1;
+      setAnsweredCount(nextAnsweredCount);
 
       if (nextPlayerProgress >= 100) {
         setAnsweredCount(totalQuestions);
@@ -107,22 +123,34 @@ export default function PinyinRaceGame({
         setMessage("赢了，你到达终点了！");
         return;
       }
-    } else {
-      setMessage("不对！再试试！- Try Again!");
-    }
 
-    const nextAnsweredCount = isCorrect ? answeredCount + 1 : answeredCount;
+      if (nextAnsweredCount >= totalQuestions) {
+        setGameOver(true);
+        setRaceMoving(false);
+        setMessage("问题答完了，但还没到终点。再试试！");
+        return;
+      }
 
-    setAnsweredCount(nextAnsweredCount);
+      const nextIndex = currentQuestionIndex + 1;
+      setCurrentQuestionIndex(nextIndex);
 
-    if (nextAnsweredCount >= totalQuestions && nextPlayerProgress < 100) {
-      setGameOver(true);
-      setRaceMoving(false);
-      setMessage("问题答完了，但还没到终点。再试试！");
+      setTimeout(() => {
+        setLastAnswer(null);
+
+        if (nextIndex < questionPool.length) {
+          makeQuestion(questionPool, nextIndex);
+        }
+      }, 450);
+
       return;
     }
 
-    makeQuestion();
+    setLastAnswer("wrong");
+    setMessage("不对！再试试！- Try Again!");
+
+    setTimeout(() => {
+      setLastAnswer(null);
+    }, 450);
   }
 
   if (characters.length < 3) {
