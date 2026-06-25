@@ -183,7 +183,7 @@ export default function PinyinRaceGame({
 
       {!gameStarted ? (
         <div className="flex min-h-[520px] flex-col items-center justify-center rounded-[2rem] bg-gradient-to-br from-yellow-50 to-red-50 p-10 text-center">
-          <div className="text-8xl">🏎️</div>
+          <div className="text-8xl inline-block transform scale-x-[-1]">🏎️</div>
 
           <h2 className="mt-6 text-5xl font-extrabold text-gray-900">
             准备好了吗？
@@ -273,31 +273,31 @@ function RaceTrack({
   const safeProgress = Math.min(Math.max(progress, 0), 100);
 
   return (
-    <div>
-      <div className="mb-2 flex items-center justify-between text-lg font-extrabold text-gray-700">
+    <div className="space-y-2">
+      <div className="flex items-center justify-between text-lg font-bold text-gray-700">
         <span>{label}</span>
-        <span>{safeProgress}%</span>
+        <span>{Math.round(safeProgress)}%</span>
       </div>
 
-      <div className="relative h-20 overflow-hidden rounded-full bg-gray-300 shadow-inner">
-        <div className="absolute left-0 top-1/2 w-full border-t-4 border-dashed border-white/80" />
+      <div className="relative h-14 w-full overflow-hidden rounded-2xl bg-gray-200 p-1">
+        <div
+          className="absolute inset-y-1 left-1 rounded-2xl bg-red-100 transition-all duration-500"
+          style={{
+            width: `calc(${safeProgress}% - 0.5rem)`,
+          }}
+        />
 
-        <div className="absolute right-5 top-1/2 z-20 -translate-y-1/2 text-4xl">
+        <div className="absolute right-3 top-1/2 z-20 -translate-y-1/2 text-3xl">
           🏁
         </div>
 
         <div
-          className="absolute left-0 top-0 h-full rounded-full bg-blue-200 transition-all duration-500"
-          style={{ width: `${safeProgress}%` }}
-        />
-
-        <div
-          className="absolute top-1/2 z-30 -translate-y-1/2 text-6xl transition-all duration-500"
+          className="absolute top-1/2 z-30 -translate-y-1/2 text-4xl transition-all duration-500 ease-out"
           style={{
-            left: `calc(${safeProgress}% - 2rem)`,
+            left: `calc(${safeProgress}% * 0.94 + 0.5rem)`,
           }}
         >
-          {emoji}
+          <span className="inline-block -scale-x-100">{emoji}</span>
         </div>
       </div>
     </div>
