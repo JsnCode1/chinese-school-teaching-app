@@ -1,6 +1,5 @@
 // ctrl f search:
 // speed = SPEED CONTROL
-// image = BACKGROUND IMAGE
 
 "use client";
 
@@ -165,18 +164,26 @@ export default function PinyinRaceGame({
   }
 
   return (
-    <div className="relative min-h-[760px] overflow-hidden rounded-[2rem] bg-white p-8 shadow-xl">
+    <div className="relative min-h-[860px] overflow-hidden rounded-[2rem] bg-white p-8 shadow-xl">
       <div
         className="pointer-events-none absolute inset-0"
         style={{
-          backgroundImage: `linear-gradient(to right, rgba(255,255,255,0.98) 0%, rgba(255,255,255,0.92) 38%, rgba(255,255,255,0.55) 62%, rgba(255,255,255,0.18) 100%), url(${backgroundImage ?? "/story-images/default.png"})`,
+          backgroundImage: `
+            radial-gradient(
+              circle at center,
+              rgba(255,255,255,0.92) 0%,
+              rgba(255,255,255,0.78) 45%,
+              rgba(255,255,255,0.35) 100%
+            ),
+            url(${backgroundImage ?? "/story-images/default.png"})
+          `,
           backgroundSize: "cover",
-          backgroundPosition: "right center",
+          backgroundPosition: "center center",
           backgroundRepeat: "no-repeat",
         }}
       />
 
-      <div className="relative z-10 max-w-[720px]">
+      <div className="relative z-10 mx-auto w-full max-w-5xl">
         <div className="mb-8 flex items-start justify-between gap-4">
           <div>
             <h1 className="text-5xl font-extrabold text-red-700">赛车游戏</h1>
@@ -196,7 +203,7 @@ export default function PinyinRaceGame({
         </div>
 
         {!gameStarted ? (
-          <div className="flex min-h-[520px] flex-col items-center justify-center rounded-[2rem] bg-white/80 p-10 text-center shadow backdrop-blur-sm">
+          <div className="flex min-h-[560px] flex-col items-center justify-center rounded-[2rem] bg-white/80 p-10 text-center shadow backdrop-blur-sm">
             <div className="inline-block scale-x-[-1] text-8xl">🏎️</div>
 
             <h2 className="mt-6 text-5xl font-extrabold text-gray-900">
@@ -293,7 +300,7 @@ function RaceTrack({
 
       <div className="relative h-10 overflow-hidden rounded-full bg-gray-200 shadow-inner">
         <div
-          className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-red-200 to-red-300 transition-all duration-500"
+          className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-red-200 to-green-300 transition-all duration-500"
           style={{ width: `${safeProgress}%` }}
         />
 
