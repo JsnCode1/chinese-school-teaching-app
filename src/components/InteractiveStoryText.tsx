@@ -98,9 +98,15 @@ export default function InteractiveStoryText({ chineseText, pinyin }: Props) {
                 return (
                   <span
                     key={`${sentenceIndex}-${charIndex}`}
-                    className="text-3xl font-bold text-gray-900"
+                    className="mb-4 inline-flex flex-col items-center align-bottom"
                   >
-                    {char}
+                    {/* Empty block matching the Pinyin height to force baseline alignment */}
+                    <span className="text-sm font-medium leading-none select-none opacity-0">
+                      &nbsp;
+                    </span>
+                    <span className="text-3xl font-bold leading-tight text-gray-900">
+                      {char}
+                    </span>
                   </span>
                 );
               }
