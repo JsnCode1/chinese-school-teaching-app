@@ -241,7 +241,7 @@ export default function PinyinRaceGame({
 
             <div className="space-y-4 rounded-[2rem] bg-white/85 p-5 shadow backdrop-blur-sm">
               <RaceTrack label="你" emoji="🏎️" progress={playerProgress} />
-              <RaceTrack label="敌人" emoji="🚗" progress={botProgress} />
+              <RaceTrack label="电脑" emoji="🚗" progress={botProgress} />
             </div>
 
             <div
