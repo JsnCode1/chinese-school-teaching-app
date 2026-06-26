@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 type Props = {
   chineseText: string;
@@ -17,60 +17,80 @@ export default function InteractiveStoryText({ chineseText, pinyin }: Props) {
   );
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
 
-  // load and cache voices asynchronously across all browsers
+  // Keep a mutable reference to the utterance to prevent Chrome garbage collection
+  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
+
+  // Load and cache voices across all browsers safely
   useEffect(() => {
     if (typeof window === "undefined" || !window.speechSynthesis) return;
 
     const loadVoices = () => {
       const allVoices = window.speechSynthesis.getVoices();
-      setVoices(allVoices);
+      // Only update state if voices are actually loaded
+      if (allVoices.length > 0) {
+        setVoices(allVoices);
+      }
     };
 
+    // Chrome and Safari often need onvoiceschanged, but we call it immediately too
     loadVoices();
-    window.speechSynthesis.onvoiceschanged = loadVoices;
+
+    if (window.speechSynthesis.onvoiceschanged !== undefined) {
+      window.speechSynthesis.onvoiceschanged = loadVoices;
+    }
 
     return () => {
-      window.speechSynthesis.onvoiceschanged = null;
+      if (window.speechSynthesis) {
+        window.speechSynthesis.onvoiceschanged = null;
+      }
     };
   }, []);
 
-  //Pass cached voices into the speech generator
   function speakChinese(text: string) {
-    if (typeof window === "undefined") return;
+    if (typeof window === "undefined" || !window.speechSynthesis) return;
 
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = "zh-CN";
+    // Cancel any ongoing speech explicitly before building the next one
+    window.speechSynthesis.cancel();
 
-    utterance.rate = 0.67;
+    // Assign utterance to the ref object so JavaScript holds it in memory
+    utteranceRef.current = new SpeechSynthesisUtterance(text);
+    utteranceRef.current.lang = "zh-CN";
+    utteranceRef.current.rate = 0.67;
 
-    // Find authentic native Chinese voices from the cached state array
+    // Use current voices state, or look up directly from the window object if state is empty
+    const availableVoices =
+      voices.length > 0 ? voices : window.speechSynthesis.getVoices();
+
     const preferredVoice =
-      // Look for modern natural AI/Neural voices first
-      voices.find(
+      availableVoices.find(
         (v) =>
           v.name.includes("Xiaoxiao") ||
           v.name.includes("Meijia") ||
           v.name.includes("Yaoyao"),
       ) ||
-      // Look for reliable premium native platform voices
-      voices.find(
+      availableVoices.find(
         (v) =>
           v.name.includes("Tingting") ||
           v.name.includes("Google 普通话") ||
           v.name.includes("Google 國語") ||
           v.name.includes("Huihui"),
       ) ||
-      // Fallback to any general mainland Chinese engine
-      voices.find((v) => v.lang === "zh-CN") ||
-      // Universal fallback to any Chinese language tag variant (zh-TW, zh-SG, zh-HK)
-      voices.find((v) => v.lang.startsWith("zh-"));
+      availableVoices.find((v) => v.lang === "zh-CN") ||
+      availableVoices.find((v) => v.lang.startsWith("zh-"));
 
     if (preferredVoice) {
-      utterance.voice = preferredVoice;
+      utteranceRef.current.voice = preferredVoice;
     }
 
-    window.speechSynthesis.cancel();
-    window.speechSynthesis.speak(utterance);
+    // Clean up reference memory once speaking concludes or errors out
+    utteranceRef.current.onend = () => {
+      utteranceRef.current = null;
+    };
+    utteranceRef.current.onerror = () => {
+      utteranceRef.current = null;
+    };
+
+    window.speechSynthesis.speak(utteranceRef.current);
   }
 
   const chineseSentences = splitChineseIntoSentences(chineseText);
@@ -100,7 +120,6 @@ export default function InteractiveStoryText({ chineseText, pinyin }: Props) {
                     key={`${sentenceIndex}-${charIndex}`}
                     className="mb-4 inline-flex flex-col items-center align-bottom"
                   >
-                    {/* Empty block matching the Pinyin height to force baseline alignment */}
                     <span className="text-sm font-medium leading-none select-none opacity-0">
                       &nbsp;
                     </span>
