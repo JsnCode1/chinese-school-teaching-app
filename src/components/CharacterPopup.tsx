@@ -9,23 +9,10 @@ type Props = {
   onClose: () => void;
 };
 
-type InfoMode = "none" | "pinyin" | "strokes" | "radical" | "structure";
-
 export default function CharacterPopup({ character, onClose }: Props) {
-  const [mode, setMode] = useState<InfoMode>("none");
   const [showPinyin, setShowPinyin] = useState(false);
   const [strokeAnimationCount, setStrokeAnimationCount] = useState(0);
   const [highlightRadical, setHighlightRadical] = useState(false);
-
-  function getInfoText() {
-    if (mode === "pinyin") return character.pinyin;
-    if (mode === "strokes") {
-      return `${character.stroke_count ?? "Unknown"} strokes`;
-    }
-    if (mode === "radical") return "Radical highlighted";
-    if (mode === "structure") return character.structure ?? "Unknown";
-    return "Choose an option";
-  }
 
   function speakChinese(text: string) {
     const utterance = new SpeechSynthesisUtterance(text);
@@ -47,6 +34,7 @@ export default function CharacterPopup({ character, onClose }: Props) {
     window.speechSynthesis.cancel();
     window.speechSynthesis.speak(utterance);
   }
+
   return (
     <div
       onClick={onClose}
@@ -89,17 +77,14 @@ export default function CharacterPopup({ character, onClose }: Props) {
               <HanziStrokeWriter
                 character={character.character}
                 animateTrigger={strokeAnimationCount}
-                highlightRadical={mode === "radical" && highlightRadical}
+                highlightRadical={highlightRadical}
               />
             </div>
           </div>
 
           <div className="flex w-full flex-col justify-start gap-4 md:h-[550px] md:w-72">
             <button
-              onClick={() => {
-                setShowPinyin((current) => !current);
-                setMode("pinyin");
-              }}
+              onClick={() => setShowPinyin((current) => !current)}
               className={buttonClass}
             >
               拼音
@@ -114,7 +99,7 @@ export default function CharacterPopup({ character, onClose }: Props) {
 
             <button
               onClick={() => {
-                setMode("strokes");
+                setHighlightRadical(false);
                 setStrokeAnimationCount((current) => current + 1);
               }}
               className={buttonClass}
@@ -123,28 +108,11 @@ export default function CharacterPopup({ character, onClose }: Props) {
             </button>
 
             <button
-              onClick={() => {
-                setMode("radical");
-                setHighlightRadical((current) => !current);
-              }}
+              onClick={() => setHighlightRadical((current) => !current)}
               className={buttonClass}
             >
               部首
             </button>
-
-            <button
-              onClick={() => setMode("structure")}
-              className={buttonClass}
-            >
-              结构
-            </button>
-
-            <div className="mt-4 flex h-40 flex-col justify-center rounded-3xl bg-white p-5 text-center shadow">
-              <p className="text-lg font-bold text-gray-500">Information</p>
-              <p className="mt-3 break-words text-2xl font-extrabold text-red-600">
-                {getInfoText()}
-              </p>
-            </div>
 
             {character.example && (
               <div className="rounded-3xl bg-yellow-50 p-5 text-center shadow">
