@@ -23,6 +23,10 @@ export type Story = {
   english_translation: string | null;
   page_numer: number | null;
   image_path?: string | null;
+  title?: string | null;
+  author?: string | null;
+  order_index?: number | null;
+  text_format?: "story" | "poem" | null;
 };
 
 export type CharacterItem = {

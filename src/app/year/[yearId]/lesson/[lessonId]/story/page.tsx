@@ -1,7 +1,10 @@
 import BackLink from "@/components/BackLink";
 import InteractiveStoryText from "@/components/InteractiveStoryText";
+import InteractivePoemText from "@/components/InteractivePoemText";
 import { supabase } from "@/lib/supabase";
 import type { Story } from "@/lib/types";
+
+export const dynamic = "force-dynamic";
 
 export default async function StoryPage({
   params,
@@ -19,7 +22,8 @@ export default async function StoryPage({
   const { data: stories, error } = await supabase
     .from("stories")
     .select("*")
-    .eq("lesson_id", lessonId);
+    .eq("lesson_id", lessonId)
+    .order("order_index", { ascending: true });
 
   if (error) {
     return <main className="p-8">Error loading story: {error.message}</main>;
@@ -27,7 +31,7 @@ export default async function StoryPage({
 
   return (
     <main className="min-h-screen bg-orange-50 p-6 md:p-10">
-      <section className="mx-auto max-w-5xl">
+      <section className="mx-auto max-w-6xl">
         <BackLink
           href={`/year/${yearId}/lesson/${lessonId}`}
           label="Back to lesson"
@@ -45,7 +49,13 @@ export default async function StoryPage({
           )}
         </div>
 
-        <div className="space-y-8">
+        <div
+          className={
+            stories && stories.length > 1
+              ? "grid gap-8 lg:grid-cols-2"
+              : "space-y-8"
+          }
+        >
           {(stories as Story[] | null)?.map((story) => (
             <div
               key={story.id}
@@ -53,7 +63,7 @@ export default async function StoryPage({
             >
               {story.image_path && (
                 <div
-                  className="absolute inset-0 opacity-25"
+                  className="absolute inset-0 opacity-20"
                   style={{
                     backgroundImage: `url(${story.image_path})`,
                     backgroundSize: "contain",
@@ -64,12 +74,35 @@ export default async function StoryPage({
               )}
 
               <div className="relative z-10">
-                <InteractiveStoryText
-                  chineseText={story.chinese_text}
-                  pinyin={story.pinyin}
-                />
+                {(story.title || story.author) && (
+                  <div className="mb-8 text-center">
+                    {story.title && (
+                      <h2 className="text-4xl font-extrabold text-red-700">
+                        {story.title}
+                      </h2>
+                    )}
 
-                <div className="mt-10 rounded-2xl bg-green-50 p-4">
+                    {story.author && (
+                      <p className="mt-2 text-xl font-bold text-gray-500">
+                        {story.author}
+                      </p>
+                    )}
+                  </div>
+                )}
+
+                {story.text_format === "poem" ? (
+                  <InteractivePoemText
+                    chineseText={story.chinese_text}
+                    pinyin={story.pinyin}
+                  />
+                ) : (
+                  <InteractiveStoryText
+                    chineseText={story.chinese_text}
+                    pinyin={story.pinyin}
+                  />
+                )}
+
+                <div className="mt-10 rounded-2xl bg-green-50/90 p-4">
                   <h2 className="mb-2 text-lg font-bold text-green-700">
                     English Translation
                   </h2>
