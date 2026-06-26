@@ -29,7 +29,7 @@ export default function CharacterPopup({ character, onClose }: Props) {
     }
 
     utterance.lang = "zh-CN";
-    utterance.rate = 0.25;
+    utterance.rate = 0.67;
 
     window.speechSynthesis.cancel();
     window.speechSynthesis.speak(utterance);
