@@ -2,6 +2,8 @@ import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import type { Year } from "@/lib/types";
 
+export const dynamic = "force-dynamic";
+
 export default async function HomePage() {
   const { data: years, error } = await supabase
     .from("years")
