@@ -21,7 +21,7 @@ function speakChinese(text: string) {
   }
 
   utterance.lang = "zh-CN";
-  utterance.rate = 0.45;
+  utterance.rate = 0.6;
 
   window.speechSynthesis.cancel();
   window.speechSynthesis.speak(utterance);

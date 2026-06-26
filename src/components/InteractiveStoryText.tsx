@@ -41,7 +41,7 @@ export default function InteractiveStoryText({ chineseText, pinyin }: Props) {
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = "zh-CN";
 
-    utterance.rate = 0.5;
+    utterance.rate = 0.6;
 
     // Find authentic native Chinese voices from the cached state array
     const preferredVoice =
