@@ -30,7 +30,6 @@ export default function HanziStrokeWriter({
       showCharacter: true,
       strokeAnimationSpeed: 1,
       delayBetweenStrokes: 250,
-
       radicalColor: highlightRadical ? "#FF0000" : undefined,
     });
   }, [character, highlightRadical]);
@@ -42,5 +41,5 @@ export default function HanziStrokeWriter({
     writerRef.current.animateCharacter();
   }, [animateTrigger]);
 
-  return <div ref={targetRef} className="relative z-10" />;
+  return <div ref={targetRef} className="relative z-10 h-[420px] w-[420px]" />;
 }
