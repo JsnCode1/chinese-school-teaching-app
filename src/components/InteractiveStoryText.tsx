@@ -94,67 +94,92 @@ export default function InteractiveStoryText({ chineseText, pinyin }: Props) {
   }
 
   const chineseSentences = splitChineseIntoSentences(chineseText);
+
+  // Combine all sentences together to create the full story text
+  const fullStoryText = chineseSentences.join("");
+
   const pinyinWords = pinyin?.split(" ") ?? [];
   let pinyinIndex = 0;
 
   return (
-    <p className="text-left leading-relaxed">
-      {chineseSentences.map((sentence, sentenceIndex) => {
-        const chars = sentence.split("");
-        const isActive = activeSentenceIndex === sentenceIndex;
+    <div className="flex flex-col gap-4">
+      {/* Read Entire Story Button */}
+      <div className="flex gap-2">
+        <button
+          onClick={() => speakChinese(fullStoryText)}
+          className="flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2 font-semibold text-white shadow-md transition hover:bg-red-700 active:scale-95"
+        >
+          读全课文
+        </button>
 
-        return (
-          <span
-            key={sentenceIndex}
-            onMouseEnter={() => setActiveSentenceIndex(sentenceIndex)}
-            onMouseLeave={() => setActiveSentenceIndex(null)}
-            onClick={() => speakChinese(sentence)}
-            className={`cursor-pointer rounded-md transition ${isActive ? "bg-red-50" : ""}`}
-          >
-            {chars.map((char, charIndex) => {
-              const isPunctuation = "，。！？；：,.!?;:（）() ".includes(char);
+        <button
+          onClick={() => window.speechSynthesis?.cancel()}
+          className="rounded-lg border border-gray-300 bg-white px-4 py-2 font-semibold text-gray-700 shadow-sm transition hover:bg-gray-50 active:scale-95"
+        >
+          停止朗读
+        </button>
+      </div>
 
-              if (isPunctuation) {
+      <p className="text-left leading-relaxed">
+        {chineseSentences.map((sentence, sentenceIndex) => {
+          const chars = sentence.split("");
+          const isActive = activeSentenceIndex === sentenceIndex;
+
+          return (
+            <span
+              key={sentenceIndex}
+              onMouseEnter={() => setActiveSentenceIndex(sentenceIndex)}
+              onMouseLeave={() => setActiveSentenceIndex(null)}
+              onClick={() => speakChinese(sentence)}
+              className={`cursor-pointer rounded-md transition ${isActive ? "bg-red-50" : ""}`}
+            >
+              {chars.map((char, charIndex) => {
+                const isPunctuation = "，。！？；：,.!?;:（）() ".includes(
+                  char,
+                );
+
+                if (isPunctuation) {
+                  return (
+                    <span
+                      key={`${sentenceIndex}-${charIndex}`}
+                      className="mb-4 inline-flex flex-col items-center align-bottom"
+                    >
+                      <span className="text-sm font-medium leading-none select-none opacity-0">
+                        &nbsp;
+                      </span>
+                      <span className="text-3xl font-bold leading-tight text-gray-900">
+                        {char}
+                      </span>
+                    </span>
+                  );
+                }
+
+                const charPinyin = pinyinWords[pinyinIndex++] ?? "";
+
                 return (
                   <span
                     key={`${sentenceIndex}-${charIndex}`}
                     className="mb-4 inline-flex flex-col items-center align-bottom"
                   >
-                    <span className="text-sm font-medium leading-none select-none opacity-0">
-                      &nbsp;
+                    <span className="text-sm font-medium leading-none text-red-600">
+                      {charPinyin}
                     </span>
-                    <span className="text-3xl font-bold leading-tight text-gray-900">
+                    <span
+                      className={`text-3xl font-bold leading-tight text-gray-900 ${
+                        isActive
+                          ? "underline decoration-red-500 decoration-4 underline-offset-8"
+                          : ""
+                      }`}
+                    >
                       {char}
                     </span>
                   </span>
                 );
-              }
-
-              const charPinyin = pinyinWords[pinyinIndex++] ?? "";
-
-              return (
-                <span
-                  key={`${sentenceIndex}-${charIndex}`}
-                  className="mb-4 inline-flex flex-col items-center align-bottom"
-                >
-                  <span className="text-sm font-medium leading-none text-red-600">
-                    {charPinyin}
-                  </span>
-                  <span
-                    className={`text-3xl font-bold leading-tight text-gray-900 ${
-                      isActive
-                        ? "underline decoration-red-500 decoration-4 underline-offset-8"
-                        : ""
-                    }`}
-                  >
-                    {char}
-                  </span>
-                </span>
-              );
-            })}
-          </span>
-        );
-      })}
-    </p>
+              })}
+            </span>
+          );
+        })}
+      </p>
+    </div>
   );
 }
