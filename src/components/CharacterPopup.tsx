@@ -56,23 +56,53 @@ export default function CharacterPopup({ character, onClose }: Props) {
         <div className="flex flex-col gap-8 md:flex-row">
           <div className="flex flex-1 items-center justify-center">
             <div className="relative flex h-[550px] w-[550px] max-w-full flex-shrink-0 flex-col items-center justify-center border-4 border-slate-400 bg-white shadow-lg">
-              <div className="absolute inset-0 grid grid-cols-2 grid-rows-2">
-                <div className="border-b-2 border-r-2 border-dashed border-slate-300" />
-                <div className="border-b-2 border-dashed border-slate-300" />
-                <div className="border-r-2 border-dashed border-slate-300" />
-                <div />
-              </div>
+              {/* Background practice grid lines */}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 550 550"
+                className="absolute inset-0 h-full w-full"
+              >
+                <line
+                  x1="0"
+                  y1="0"
+                  x2="550"
+                  y2="550"
+                  stroke="#DDD"
+                  strokeWidth="2"
+                />
+                <line
+                  x1="550"
+                  y1="0"
+                  x2="0"
+                  y2="550"
+                  stroke="#DDD"
+                  strokeWidth="2"
+                />
+                <line
+                  x1="275"
+                  y1="0"
+                  x2="275"
+                  y2="550"
+                  stroke="#DDD"
+                  strokeWidth="2"
+                />
+                <line
+                  x1="0"
+                  y1="275"
+                  x2="550"
+                  y2="275"
+                  stroke="#DDD"
+                  strokeWidth="2"
+                />
+              </svg>
 
-              <div className="absolute left-0 top-1/2 w-full border-t-2 border-dashed border-slate-300" />
-              <div className="absolute left-1/2 top-0 h-full border-l-2 border-dashed border-slate-300" />
-
-              <div className="relative z-10 mb-2 h-14">
-                {showPinyin && (
+              {showPinyin && (
+                <div className="absolute top-6 left-1/2 -translate-x-1/2 z-20">
                   <span className="text-5xl font-bold text-red-600">
                     {character.pinyin}
                   </span>
-                )}
-              </div>
+                </div>
+              )}
 
               <HanziStrokeWriter
                 character={character.character}
