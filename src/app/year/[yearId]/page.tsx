@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import type { Lesson, Year } from "@/lib/types";
+import LessonCard from "@/components/LessonCard";
 
 export default async function YearPage({
   params,
@@ -63,25 +64,7 @@ export default async function YearPage({
 
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
         {lessons?.map((lesson: Lesson) => (
-          <Link
-            key={lesson.id}
-            href={`/year/${yearId}/lesson/${lesson.id}`}
-            className="block rounded-2xl border-2 border-orange-200 bg-white p-8 shadow transition hover:scale-105 hover:border-red-400 hover:shadow-xl"
-          >
-            <h2 className="mb-3 text-3xl font-bold text-red-600">
-              Lesson {lesson.lesson_number}
-            </h2>
-
-            <h3 className="mb-3 text-xl font-semibold text-gray-800">
-              {lesson.title}
-            </h3>
-
-            <p className="text-gray-600">{lesson.description}</p>
-
-            <span className="mt-6 inline-block rounded-full bg-red-600 px-5 py-3 font-bold text-white">
-              Open Lesson →
-            </span>
-          </Link>
+          <LessonCard key={lesson.id} lesson={lesson} yearId={yearId} />
         ))}
       </div>
     </main>

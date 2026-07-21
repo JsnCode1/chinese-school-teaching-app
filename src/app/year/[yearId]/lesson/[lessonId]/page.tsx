@@ -48,7 +48,7 @@ export default async function LessonOverviewPage({
           </p>
         </div>
 
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
           <OptionCard
             title="Story"
             description="Read the story in Chinese, pinyin, and English."

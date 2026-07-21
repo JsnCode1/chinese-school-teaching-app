@@ -10,8 +10,7 @@ function shuffleArray<T>(array: T[]) {
   return [...array].sort(() => Math.random() - 0.5);
 }
 
-const QUESTIONS_PER_GAME = 10;
-const PLAYER_PROGRESS_PER_CORRECT = 100 / QUESTIONS_PER_GAME;
+const DEFAULT_QUESTIONS_PER_GAME = 10;
 const BOT_PROGRESS_PER_TICK = 4; // SPEED CONTROL: bigger = bot moves more each tick
 const BOT_TICK_MS = 1800; // SPEED CONTROL: smaller = bot moves more often
 
@@ -36,9 +35,13 @@ export default function PinyinRaceGame({
   );
   const [questionPool, setQuestionPool] = useState<CharacterItem[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [questionCount, setQuestionCount] = useState(
+    Math.min(DEFAULT_QUESTIONS_PER_GAME, characters.length),
+  );
 
+  const maxQuestionCount = Math.max(1, characters.length);
   const totalQuestions =
-    questionPool.length || Math.min(QUESTIONS_PER_GAME, characters.length);
+    questionPool.length || Math.min(questionCount, maxQuestionCount);
 
   const questionProgress = totalQuestions
     ? (answeredCount / totalQuestions) * 100
@@ -56,6 +59,12 @@ export default function PinyinRaceGame({
     setQuestion(correct);
     setChoices(shuffleArray([correct, ...wrongChoices]));
   }
+
+  useEffect(() => {
+    setQuestionCount((currentQuestionCount) =>
+      Math.min(currentQuestionCount, characters.length),
+    );
+  }, [characters.length]);
 
   useEffect(() => {
     if (!gameStarted || !raceMoving || gameOver) return;
@@ -78,9 +87,10 @@ export default function PinyinRaceGame({
   }, [gameStarted, raceMoving, gameOver]);
 
   function startGame() {
+    const safeQuestionCount = Math.min(questionCount, maxQuestionCount);
     const newQuestionPool = shuffleArray(characters).slice(
       0,
-      QUESTIONS_PER_GAME,
+      safeQuestionCount,
     );
 
     setPlayerProgress(0);
@@ -105,9 +115,10 @@ export default function PinyinRaceGame({
     }
 
     const isCorrect = choice.id === question.id;
+    const playerProgressPerCorrect = 100 / totalQuestions;
 
     const nextPlayerProgress = isCorrect
-      ? Math.min(playerProgress + PLAYER_PROGRESS_PER_CORRECT, 100)
+      ? Math.min(playerProgress + playerProgressPerCorrect, 100)
       : playerProgress;
 
     if (isCorrect) {
@@ -213,6 +224,33 @@ export default function PinyinRaceGame({
             <p className="mt-4 max-w-xl text-xl font-semibold text-gray-700">
               看拼音，选正确的汉字。答对你的车会往前跑。
             </p>
+
+            <div className="mt-6 flex items-center gap-3 rounded-2xl bg-white/90 px-4 py-3 shadow">
+              <label className="text-lg font-bold text-gray-800">
+                问题数量
+              </label>
+
+              <input
+                type="number"
+                min={1}
+                max={maxQuestionCount}
+                value={questionCount}
+                onChange={(event) => {
+                  const nextValue = Number(event.target.value);
+
+                  if (!Number.isFinite(nextValue)) return;
+
+                  setQuestionCount(
+                    Math.min(Math.max(1, nextValue), maxQuestionCount),
+                  );
+                }}
+                className="w-24 rounded-xl border-2 border-red-200 px-3 py-2 text-center text-lg font-bold text-gray-900 outline-none focus:border-red-500"
+              />
+
+              <span className="text-sm font-semibold text-gray-600">
+                / {maxQuestionCount}
+              </span>
+            </div>
 
             <button
               onClick={startGame}

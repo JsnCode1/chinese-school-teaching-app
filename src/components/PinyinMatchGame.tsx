@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import type { CharacterItem } from "@/lib/types";
 
 function shuffleArray<T>(array: T[]) {
-  return [...array].sort(() => Math.random() - 0.5);
+  const [...shuffled] = [...array].sort(() => Math.random() - 0.5);
+  return [...shuffled].sort(() => Math.random() - 0.5);
 }
 
 export default function PinyinMatchGame({
@@ -81,6 +82,12 @@ export default function PinyinMatchGame({
     checkMatch(draggedCharacterId, pinyinCharacterId);
   }
 
+  function handleHanziCardClick(characterId: string) {
+    setSelectedCharacterId((currentSelectedCharacterId) =>
+      currentSelectedCharacterId === characterId ? null : characterId,
+    );
+  }
+
   function resetGame() {
     setMatches({});
     setMessage("");
@@ -127,7 +134,7 @@ export default function PinyinMatchGame({
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[2fr_1fr]">
+      <div className="flex flex-col gap-4">
         <section className="rounded-3xl bg-white p-4 shadow">
           <h3 className="mb-3 text-xl font-bold text-gray-900">
             Drop characters here
@@ -186,7 +193,7 @@ export default function PinyinMatchGame({
             Drag characters
           </h3>
 
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-4 gap-4 md:grid-cols-5">
             {hanziCards.map((item) => {
               const alreadyMatched = matchedCharacterIds.includes(item.id);
               const isSelected = selectedCharacterId === item.id;
@@ -198,7 +205,7 @@ export default function PinyinMatchGame({
                   key={item.id}
                   draggable
                   onDragStart={(event) => handleDragStart(event, item.id)}
-                  onClick={() => setSelectedCharacterId(item.id)}
+                  onClick={() => handleHanziCardClick(item.id)}
                   className={`cursor-grab rounded-2xl border-2 p-3 text-4xl font-extrabold shadow transition hover:bg-white ${
                     isSelected
                       ? "border-blue-500 bg-blue-100 text-blue-700"
