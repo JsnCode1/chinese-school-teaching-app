@@ -40,7 +40,7 @@ export default function InteractivePoemText({ chineseText, pinyin }: Props) {
       <div className="flex justify-center gap-3">
         <button
           onClick={() => speakChinese(fullPoemText)}
-          className="flex items-center gap-2 rounded-xl bg-purple-600 px-5 py-2.5 font-semibold text-white shadow-md transition hover:bg-purple-700 active:scale-95"
+          className="flex items-center gap-2 rounded-xl bg-red-600 px-5 py-2.5 font-semibold text-white shadow-md transition hover:bg-purple-700 active:scale-95"
         >
           读全诗
         </button>

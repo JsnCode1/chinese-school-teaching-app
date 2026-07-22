@@ -19,6 +19,38 @@ export default async function SentencesPage({
     return <main className="p-8">Error: {error.message}</main>;
   }
 
+  if (!sentences || sentences.length === 0) {
+    return (
+      <main className="min-h-screen bg-orange-50 p-6 md:p-10">
+        <section className="mx-auto max-w-6xl">
+          <BackLink
+            href={`/year/${yearId}/lesson/${lessonId}`}
+            label="Back to lesson"
+          />
+
+          <h1 className="mb-8 text-4xl font-bold text-red-700">
+            Short Sentences 短句
+          </h1>
+
+          <div className="flex min-h-[320px] items-center justify-center">
+            <div className="w-full max-w-xl rounded-3xl bg-white p-10 text-center shadow-lg">
+              <div className="flex items-center justify-center">
+                <span className="text-[40px] text-red-700">&#128214;</span>
+              </div>
+              <h2 className="mt-5 text-3xl font-bold text-gray-800">
+                暂无句子/无句子
+              </h2>
+
+              <p className="mt-3 text-lg text-gray-600">
+                No short sentences have been added to this lesson yet.
+              </p>
+            </div>
+          </div>
+        </section>
+      </main>
+    );
+  }
+
   return (
     <main className="min-h-screen bg-orange-50 p-6 md:p-10">
       <section className="mx-auto max-w-6xl">
