@@ -1,4 +1,4 @@
-import Link from "next/link";
+import BackLink from "@/components/BackLink";
 import { supabase } from "@/lib/supabase";
 import type { CharacterItem } from "@/lib/types";
 
@@ -22,9 +22,10 @@ export default async function CharacterDetailPage({
   if (error || !character) {
     return (
       <main className="min-h-screen bg-orange-50 p-8">
-        <Link href={`/year/${yearId}/lesson/${lessonId}/characters`}>
-          ← Back to Characters
-        </Link>
+        <BackLink
+          href={`/year/${yearId}/lesson/${lessonId}/characters`}
+          label="Back to characters"
+        />
 
         <p className="mt-6">Character not found.</p>
       </main>
@@ -35,12 +36,10 @@ export default async function CharacterDetailPage({
 
   return (
     <main className="min-h-screen bg-orange-50 p-8">
-      <Link
+      <BackLink
         href={`/year/${yearId}/lesson/${lessonId}/characters`}
-        className="font-bold text-red-600"
-      >
-        ← Back to Characters
-      </Link>
+        label="Back to characters"
+      />
 
       <section className="mt-8 rounded-3xl bg-white p-8 shadow">
         <div className="text-center">

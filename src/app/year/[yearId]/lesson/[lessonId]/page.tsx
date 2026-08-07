@@ -88,6 +88,12 @@ export default async function LessonOverviewPage({
             href={`/year/${yearId}/lesson/${lessonId}/race`}
             emoji="赛车"
           />
+          <OptionCard
+            title="Writer Quiz"
+            description="Draw the character that matches the pinyin."
+            href={`/year/${yearId}/lesson/${lessonId}/writer-quiz`}
+            emoji="写字"
+          />
         </div>
       </section>
     </main>
