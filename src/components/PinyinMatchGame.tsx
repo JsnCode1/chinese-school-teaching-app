@@ -134,7 +134,7 @@ export default function PinyinMatchGame({
         </div>
       </div>
 
-      <div className="flex flex-col gap-4">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[2fr_1fr]">
         <section className="rounded-3xl bg-white p-4 shadow">
           <h3 className="mb-3 text-xl font-bold text-gray-900">
             Drop characters here
@@ -193,7 +193,7 @@ export default function PinyinMatchGame({
             Drag characters
           </h3>
 
-          <div className="grid grid-cols-4 gap-4 md:grid-cols-5">
+          <div className="grid grid-cols-3 gap-4">
             {hanziCards.map((item) => {
               const alreadyMatched = matchedCharacterIds.includes(item.id);
               const isSelected = selectedCharacterId === item.id;
