@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import HanziWriter from "hanzi-writer";
 
 type Props = {
   character: string;
@@ -20,18 +19,35 @@ export default function HanziStrokeWriter({
   useEffect(() => {
     if (!targetRef.current) return;
 
+    let isCancelled = false;
     targetRef.current.innerHTML = "";
 
-    writerRef.current = HanziWriter.create(targetRef.current, character, {
-      width: 420,
-      height: 420,
-      padding: 20,
-      showOutline: true,
-      showCharacter: true,
-      strokeAnimationSpeed: 1,
-      delayBetweenStrokes: 250,
-      radicalColor: highlightRadical ? "#FF0000" : undefined,
-    });
+    const loadWriter = async () => {
+      const HanziWriterModule = await import("hanzi-writer");
+      const HanziWriter =
+        (HanziWriterModule as any).default ?? HanziWriterModule;
+
+      if (!targetRef.current || isCancelled) return;
+
+      writerRef.current?.cancelQuiz?.();
+      writerRef.current = HanziWriter.create(targetRef.current, character, {
+        width: 420,
+        height: 420,
+        padding: 20,
+        showOutline: true,
+        showCharacter: true,
+        strokeAnimationSpeed: 1,
+        delayBetweenStrokes: 250,
+        radicalColor: highlightRadical ? "#FF0000" : undefined,
+      });
+    };
+
+    void loadWriter();
+
+    return () => {
+      isCancelled = true;
+      writerRef.current?.cancelQuiz?.();
+    };
   }, [character, highlightRadical]);
 
   useEffect(() => {

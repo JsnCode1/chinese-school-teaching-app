@@ -1,8 +1,25 @@
+import { default as nextDynamic } from "next/dynamic";
 import BackLink from "@/components/BackLink";
-import InteractiveStoryText from "@/components/InteractiveStoryText";
-import InteractivePoemText from "@/components/InteractivePoemText";
 import { supabase } from "@/lib/supabase";
 import type { Story } from "@/lib/types";
+
+const InteractiveStoryText = nextDynamic(
+  () => import("@/components/InteractiveStoryText"),
+  {
+    loading: () => (
+      <div className="py-10 text-center">Loading story reader...</div>
+    ),
+  },
+);
+
+const InteractivePoemText = nextDynamic(
+  () => import("@/components/InteractivePoemText"),
+  {
+    loading: () => (
+      <div className="py-10 text-center">Loading poem reader...</div>
+    ),
+  },
+);
 
 export const dynamic = "force-dynamic";
 

@@ -1,7 +1,15 @@
+import dynamic from "next/dynamic";
 import BackLink from "@/components/BackLink";
-import PinyinRaceGame from "@/components/PinyinRaceGame";
 import { supabase } from "@/lib/supabase";
 import type { CharacterItem } from "@/lib/types";
+
+const PinyinRaceGame = dynamic(() => import("@/components/PinyinRaceGame"), {
+  loading: () => (
+    <div className="rounded-2xl bg-white p-10 text-center shadow">
+      Loading race game...
+    </div>
+  ),
+});
 
 export default async function RacePage({
   params,

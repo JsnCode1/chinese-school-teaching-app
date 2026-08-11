@@ -1,7 +1,18 @@
+import dynamic from "next/dynamic";
 import BackLink from "@/components/BackLink";
-import PhrasePracticeCards from "@/components/PhrasePracticeCards";
 import { supabase } from "@/lib/supabase";
 import type { Phrase } from "@/lib/types";
+
+const PhrasePracticeCards = dynamic(
+  () => import("@/components/PhrasePracticeCards"),
+  {
+    loading: () => (
+      <div className="rounded-2xl bg-white p-10 text-center shadow">
+        Loading phrases...
+      </div>
+    ),
+  },
+);
 
 export default async function PhrasesPage({
   params,

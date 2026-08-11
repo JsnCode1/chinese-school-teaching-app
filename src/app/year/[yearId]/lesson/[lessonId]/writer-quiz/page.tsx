@@ -1,7 +1,15 @@
+import dynamic from "next/dynamic";
 import BackLink from "@/components/BackLink";
-import WriterQuiz from "@/components/WriterQuiz";
 import { supabase } from "@/lib/supabase";
 import type { CharacterItem } from "@/lib/types";
+
+const WriterQuiz = dynamic(() => import("@/components/WriterQuiz"), {
+  loading: () => (
+    <div className="rounded-2xl bg-white p-10 text-center shadow">
+      Loading writer quiz...
+    </div>
+  ),
+});
 
 export default async function WriterQuizPage({
   params,

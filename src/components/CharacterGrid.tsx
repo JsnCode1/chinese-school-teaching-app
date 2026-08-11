@@ -1,8 +1,12 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useState } from "react";
-import CharacterPopup from "@/components/CharacterPopup";
 import type { CharacterItem } from "@/lib/types";
+
+const CharacterPopup = dynamic(() => import("@/components/CharacterPopup"), {
+  ssr: false,
+});
 
 export default function CharacterGrid({
   characters,

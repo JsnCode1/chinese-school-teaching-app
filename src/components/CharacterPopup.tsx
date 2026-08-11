@@ -1,8 +1,15 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useState } from "react";
 import type { CharacterItem } from "@/lib/types";
-import HanziStrokeWriter from "@/components/HanziStrokeWriter";
+
+const HanziStrokeWriter = dynamic(
+  () => import("@/components/HanziStrokeWriter"),
+  {
+    ssr: false,
+  },
+);
 
 type Props = {
   character: CharacterItem;

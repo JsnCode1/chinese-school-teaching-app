@@ -1,7 +1,15 @@
+import dynamic from "next/dynamic";
 import BackLink from "@/components/BackLink";
-import CharacterGrid from "@/components/CharacterGrid";
 import { supabase } from "@/lib/supabase";
 import type { CharacterItem } from "@/lib/types";
+
+const CharacterGrid = dynamic(() => import("@/components/CharacterGrid"), {
+  loading: () => (
+    <div className="rounded-2xl bg-white p-10 text-center shadow">
+      Loading characters...
+    </div>
+  ),
+});
 
 export default async function CharactersPage({
   params,
