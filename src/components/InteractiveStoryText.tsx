@@ -11,6 +11,15 @@ function splitChineseIntoSentences(text: string) {
   return text.match(/[^。！？!?]+[。！？!?]?/g) ?? [];
 }
 
+function normalizePinyin(input: string | null) {
+  return (
+    input
+      ?.split(/\s+/)
+      .map((token) => token.replace(/[，。！？；：、,.!?;:…]/g, "").trim())
+      .filter(Boolean) ?? []
+  );
+}
+
 export default function InteractiveStoryText({ chineseText, pinyin }: Props) {
   const [activeSentenceIndex, setActiveSentenceIndex] = useState<number | null>(
     null,
@@ -46,11 +55,23 @@ export default function InteractiveStoryText({ chineseText, pinyin }: Props) {
     };
   }, []);
 
+  function stopReading() {
+    if (typeof window !== "undefined" && window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+    }
+  }
+
+  useEffect(() => {
+    return () => {
+      stopReading();
+    };
+  }, []);
+
   function speakChinese(text: string) {
     if (typeof window === "undefined" || !window.speechSynthesis) return;
 
     // Cancel any ongoing speech explicitly before building the next one
-    window.speechSynthesis.cancel();
+    stopReading();
 
     // Assign utterance to the ref object so JavaScript holds it in memory
     utteranceRef.current = new SpeechSynthesisUtterance(text);
@@ -98,7 +119,7 @@ export default function InteractiveStoryText({ chineseText, pinyin }: Props) {
   // Combine all sentences together to create the full story text
   const fullStoryText = chineseSentences.join("");
 
-  const pinyinWords = pinyin?.split(" ") ?? [];
+  const pinyinWords = normalizePinyin(pinyin);
   let pinyinIndex = 0;
 
   return (
@@ -113,7 +134,7 @@ export default function InteractiveStoryText({ chineseText, pinyin }: Props) {
         </button>
 
         <button
-          onClick={() => window.speechSynthesis?.cancel()}
+          onClick={stopReading}
           className="rounded-lg border border-gray-300 bg-white px-4 py-2 font-semibold text-gray-700 shadow-sm transition hover:bg-gray-50 active:scale-95"
         >
           停止朗读
@@ -134,7 +155,7 @@ export default function InteractiveStoryText({ chineseText, pinyin }: Props) {
               className={`cursor-pointer rounded-md transition ${isActive ? "bg-red-50" : ""}`}
             >
               {chars.map((char, charIndex) => {
-                const isPunctuation = "，。！？；：,.!?;:（）() ".includes(
+                const isPunctuation = "，。！？；：、,.!?;:…（）() “”".includes(
                   char,
                 );
 

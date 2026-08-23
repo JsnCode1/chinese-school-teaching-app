@@ -1,9 +1,17 @@
 "use client";
 
+import { useEffect } from "react";
+
 type Props = {
   chineseText: string;
   pinyin: string | null;
 };
+
+function stopReading() {
+  if (typeof window !== "undefined" && window.speechSynthesis) {
+    window.speechSynthesis.cancel();
+  }
+}
 
 function speakChinese(text: string) {
   const utterance = new SpeechSynthesisUtterance(text);
@@ -31,6 +39,12 @@ export default function InteractivePoemText({ chineseText, pinyin }: Props) {
   const chineseLines = chineseText.split("\n").filter(Boolean);
   const pinyinLines = pinyin?.split("\n").filter(Boolean) ?? [];
 
+  useEffect(() => {
+    return () => {
+      stopReading();
+    };
+  }, []);
+
   // Combine all valid lines back together with line breaks for natural reading pauses
   const fullPoemText = chineseLines.join("\n");
 
@@ -46,7 +60,7 @@ export default function InteractivePoemText({ chineseText, pinyin }: Props) {
         </button>
 
         <button
-          onClick={() => window.speechSynthesis?.cancel()}
+          onClick={stopReading}
           className="rounded-xl border border-gray-300 bg-white px-5 py-2.5 font-semibold text-gray-700 shadow-sm transition hover:bg-gray-50 active:scale-95"
         >
           停止朗读
