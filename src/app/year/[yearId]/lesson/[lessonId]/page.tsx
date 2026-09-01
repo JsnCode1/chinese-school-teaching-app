@@ -50,6 +50,13 @@ export default async function LessonOverviewPage({
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
           <OptionCard
+            title="How to Use/使用说明"
+            description="Learn how each section works and how to use the lesson tools."
+            href="/how-to-use"
+            emoji="📖"
+          />
+
+          <OptionCard
             title="Story"
             description="Read the story in Chinese, pinyin, and English."
             href={`/year/${yearId}/lesson/${lessonId}/story`}

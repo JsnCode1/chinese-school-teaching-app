@@ -22,6 +22,13 @@ export default function Navbar() {
           </Link>
 
           <Link
+            href="/how-to-use"
+            className="font-semibold text-gray-700 hover:text-red-600"
+          >
+            How to Use/使用说明
+          </Link>
+
+          <Link
             href="/announcements"
             className="font-semibold text-gray-700 hover:text-red-600"
           >
