@@ -1,5 +1,5 @@
 import BackLink from "@/components/BackLink";
-import ContentCard from "@/components/ContentCard";
+import SentencePracticeCard from "@/components/SentencePracticeCard";
 import { supabase } from "@/lib/supabase";
 import type { Sentence } from "@/lib/types";
 
@@ -22,7 +22,7 @@ export default async function SentencesPage({
   if (!sentences || sentences.length === 0) {
     return (
       <main className="min-h-screen bg-orange-50 p-6 md:p-10">
-        <section className="mx-auto max-w-6xl">
+        <section className="mx-auto w-full max-w-[95vw]">
           <BackLink
             href={`/year/${yearId}/lesson/${lessonId}`}
             label="Back to lesson"
@@ -53,7 +53,7 @@ export default async function SentencesPage({
 
   return (
     <main className="min-h-screen bg-orange-50 p-6 md:p-10">
-      <section className="mx-auto max-w-6xl">
+      <section className="mx-auto w-full max-w-[95vw]">
         <BackLink
           href={`/year/${yearId}/lesson/${lessonId}`}
           label="Back to lesson"
@@ -63,9 +63,9 @@ export default async function SentencesPage({
           Short Sentences 短句
         </h1>
 
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-6">
           {(sentences as Sentence[] | null)?.map((sentence) => (
-            <ContentCard
+            <SentencePracticeCard
               key={sentence.id}
               chinese={sentence.chinese_text}
               pinyin={sentence.pinyin}

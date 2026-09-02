@@ -27,8 +27,12 @@ export default async function YearPage({
   if (error) {
     return (
       <main className="min-h-screen bg-orange-50 p-8">
-        <Link href="/" className="font-bold text-red-600">
-          ← Back to Years
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 font-bold text-red-700 shadow transition hover:bg-red-50"
+        >
+          <span aria-hidden="true">←</span>
+          <span>Back to Years</span>
         </Link>
 
         <p className="mt-6 rounded-xl bg-white p-4 text-red-700 shadow">
@@ -40,8 +44,12 @@ export default async function YearPage({
 
   return (
     <main className="min-h-screen bg-orange-50 p-8">
-      <Link href="/" className="font-bold text-red-600">
-        ← Back to Years
+      <Link
+        href="/"
+        className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 font-bold text-red-700 shadow transition hover:bg-red-50"
+      >
+        <span aria-hidden="true">←</span>
+        <span>Back to Years</span>
       </Link>
 
       <h1 className="mt-8 text-5xl font-bold text-red-700">

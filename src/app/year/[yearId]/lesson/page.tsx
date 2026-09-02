@@ -9,8 +9,12 @@ export default async function LessonMissingPage({
 
   return (
     <main className="min-h-screen bg-orange-50 p-8">
-      <Link href={`/year/${yearId}`} className="font-bold text-red-600">
-        ← Back to lessons
+      <Link
+        href={`/year/${yearId}`}
+        className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 font-bold text-red-700 shadow transition hover:bg-red-50"
+      >
+        <span aria-hidden="true">←</span>
+        <span>Back to lessons</span>
       </Link>
 
       <section className="mx-auto mt-8 max-w-2xl rounded-[2rem] bg-white p-8 shadow-lg">

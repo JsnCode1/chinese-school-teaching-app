@@ -311,8 +311,8 @@ export default function WriterQuiz({ characters }: Props) {
                     className="rounded-2xl border-2 border-purple-100 bg-purple-50 px-3 py-3 text-sm font-black text-purple-700 transition hover:bg-purple-100"
                   >
                     {outlineVisible
-                      ? "隐藏答案 / Hide Answer"
-                      : "显示答案 / Show Answer"}
+                      ? "隐藏轮廓 / Hide Outline"
+                      : "显示轮廓 / Show Outline"}
                   </button>
 
                   <button
