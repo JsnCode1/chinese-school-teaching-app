@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 type Props = {
   chineseText: string;
@@ -36,6 +36,7 @@ function speakChinese(text: string) {
 }
 
 export default function InteractivePoemText({ chineseText, pinyin }: Props) {
+  const [activeLineIndex, setActiveLineIndex] = useState<number | null>(null);
   const chineseLines = chineseText.split("\n").filter(Boolean);
   const pinyinLines = pinyin?.split("\n").filter(Boolean) ?? [];
 
@@ -74,13 +75,25 @@ export default function InteractivePoemText({ chineseText, pinyin }: Props) {
           const pinyinWords = pinyinLines[lineIndex]?.split(" ") ?? [];
           let pinyinIndex = 0;
 
+          const isActive = activeLineIndex === lineIndex;
+
           return (
             <button
               key={lineIndex}
-              onClick={() => speakChinese(line)}
-              className="block w-full rounded-2xl p-3 transition hover:bg-red-50"
+              type="button"
+              onMouseEnter={() => setActiveLineIndex(lineIndex)}
+              onMouseLeave={() => setActiveLineIndex(null)}
+              onFocus={() => setActiveLineIndex(lineIndex)}
+              onBlur={() => setActiveLineIndex(null)}
+              onClick={() => {
+                setActiveLineIndex(lineIndex);
+                speakChinese(line);
+              }}
+              className={`block w-full rounded-2xl p-3 text-center transition ${
+                isActive ? "bg-red-50" : "hover:bg-red-50"
+              }`}
             >
-              <div className="flex flex-wrap justify-center gap-4">
+              <div className="inline-flex flex-wrap justify-center gap-4 rounded-xl px-2 py-1">
                 {chars.map((char, charIndex) => {
                   const isPunctuation = "，。！？；：,.!?;:（）() ".includes(
                     char,
@@ -108,7 +121,13 @@ export default function InteractivePoemText({ chineseText, pinyin }: Props) {
                         {charPinyin}
                       </span>
 
-                      <span className="text-4xl font-bold text-gray-900 decoration-red-500 decoration-4 underline-offset-8 hover:underline">
+                      <span
+                        className={`text-4xl font-bold text-gray-900 ${
+                          isActive
+                            ? "underline decoration-red-500 decoration-4 underline-offset-8"
+                            : ""
+                        }`}
+                      >
                         {char}
                       </span>
                     </span>

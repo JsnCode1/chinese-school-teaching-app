@@ -141,7 +141,7 @@ export default function PinyinMatchGame({
           </h3>
 
           <div className="grid grid-cols-3 gap-2 xl:grid-cols-5">
-            {pinyinBoxes.map((item) => {
+            {pinyinBoxes.map((item, index) => {
               const matchedCharacterId = matches[item.id];
               const matchedCharacter = characters.find(
                 (char) => char.id === matchedCharacterId,
@@ -167,20 +167,27 @@ export default function PinyinMatchGame({
                           : "border-dashed border-blue-200 bg-orange-50 hover:border-blue-400"
                   }`}
                 >
-                  <p className="text-xl font-extrabold text-gray-900">
-                    {item.pinyin}
-                  </p>
+                  <div className="flex h-full flex-col justify-between rounded-xl bg-white p-2">
+                    <div className="flex items-center justify-center gap-2">
+                      <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-blue-100 text-sm font-black text-blue-700">
+                        {index + 1}
+                      </span>
+                      <span className="text-xl font-extrabold text-gray-900">
+                        {item.pinyin}
+                      </span>
+                    </div>
 
-                  <div className="mt-1 flex h-14 items-center justify-center rounded-xl bg-white">
-                    {matchedCharacter ? (
-                      <span className="text-3xl font-extrabold text-red-600">
-                        {matchedCharacter.character}
-                      </span>
-                    ) : (
-                      <span className="text-xs font-semibold text-gray-400">
-                        Drop here
-                      </span>
-                    )}
+                    <div className="mt-2 flex h-14 items-center justify-center rounded-xl bg-orange-50">
+                      {matchedCharacter ? (
+                        <span className="text-3xl font-extrabold text-red-600">
+                          {matchedCharacter.character}
+                        </span>
+                      ) : (
+                        <span className="text-xs font-semibold text-gray-400">
+                          Drop here
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
               );
