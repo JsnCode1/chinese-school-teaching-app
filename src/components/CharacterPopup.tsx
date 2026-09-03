@@ -1,10 +1,11 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import type { CharacterItem } from "@/lib/types";
+import type { HanziStrokeWriterRef } from "@/components/HanziStrokeWriter";
 
-const HanziStrokeWriter = dynamic(
+const HanziStrokeWriter = dynamic<any>(
   () => import("@/components/HanziStrokeWriter"),
   {
     ssr: false,
@@ -21,9 +22,14 @@ export default function CharacterPopup({ character, onClose }: Props) {
   const [strokeAnimationCount, setStrokeAnimationCount] = useState(0);
   const [highlightRadical, setHighlightRadical] = useState(false);
 
-  function speakChinese(text: string) {
-    const utterance = new SpeechSynthesisUtterance(text);
+  const hwRef = useRef<HanziStrokeWriterRef | null>(null);
+  const [hwReady, setHwReady] = useState(false);
+  const [hwHasNext, setHwHasNext] = useState(false);
 
+  function speakChinese(text: string) {
+    if (typeof window === "undefined" || !window.speechSynthesis) return;
+
+    const utterance = new SpeechSynthesisUtterance(text);
     const voices = window.speechSynthesis.getVoices();
     const preferredVoice =
       voices.find(
@@ -65,7 +71,7 @@ export default function CharacterPopup({ character, onClose }: Props) {
             <div className="relative flex h-[550px] w-[550px] max-w-full flex-shrink-0 flex-col items-center justify-center border-4 border-slate-400 bg-white shadow-lg">
               {/* Background practice grid lines */}
               <svg
-                xmlns="http://www.w3.org/2000/svg"
+                xmlns="http://w3.org"
                 viewBox="0 0 550 550"
                 className="absolute inset-0 h-full w-full"
               >
@@ -115,6 +121,9 @@ export default function CharacterPopup({ character, onClose }: Props) {
                 character={character.character}
                 animateTrigger={strokeAnimationCount}
                 highlightRadical={highlightRadical}
+                ref={hwRef}
+                onReadyChange={setHwReady}
+                onHasNextChange={setHwHasNext}
               />
             </div>
           </div>
@@ -137,11 +146,26 @@ export default function CharacterPopup({ character, onClose }: Props) {
             <button
               onClick={() => {
                 setHighlightRadical(false);
+                if (hwRef.current) {
+                  hwRef.current.reset();
+                }
                 setStrokeAnimationCount((current) => current + 1);
               }}
               className={buttonClass}
             >
               笔顺 / 笔画
+            </button>
+
+            <button
+              onClick={() => {
+                if (hwRef.current) {
+                  void hwRef.current.nextStroke();
+                }
+              }}
+              className={buttonClass}
+              disabled={!hwReady || !hwHasNext}
+            >
+              下一笔
             </button>
 
             <button
@@ -167,4 +191,4 @@ export default function CharacterPopup({ character, onClose }: Props) {
 }
 
 const buttonClass =
-  "rounded-2xl bg-gray-400 px-8 py-4 text-3xl font-bold text-white shadow-lg transition hover:scale-105 hover:bg-red-500";
+  "rounded-2xl bg-gray-400 px-8 py-4 text-3xl font-bold text-white shadow-lg transition hover:scale-105 hover:bg-red-500 disabled:opacity-50 disabled:cursor-not-allowed";
