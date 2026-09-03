@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import FillBlankGame from "./FillBlankGame";
 
 type Props = {
   chinese: string;
@@ -28,6 +29,7 @@ export default function SentencePracticeCard({
   const [showText, setShowText] = useState(true);
   const [showPinyin, setShowPinyin] = useState(true);
   const [showEnglish, setShowEnglish] = useState(true);
+  const [showFillGame, setShowFillGame] = useState(false);
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
 
@@ -121,6 +123,14 @@ export default function SentencePracticeCard({
         </span>
 
         <div className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={() => setShowFillGame((c) => !c)}
+            className="rounded-full border border-purple-200 bg-purple-50 px-4 py-2.5 text-sm font-bold text-purple-700 shadow-sm transition hover:bg-purple-100"
+          >
+            Fill-in Game / 填空游戏
+          </button>
+
           <button
             type="button"
             onClick={() => setShowText((current) => !current)}
@@ -242,6 +252,9 @@ export default function SentencePracticeCard({
       )}
       {showEnglish && english && (
         <p className="mb-2 text-center text-gray-800">{english}</p>
+      )}
+      {showFillGame && (
+        <FillBlankGame sentence={chinese} pinyin={pinyin ?? undefined} />
       )}
     </article>
   );
