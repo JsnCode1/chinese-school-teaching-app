@@ -14,6 +14,10 @@ export default function StoryListClient({
 }) {
   return (
     <BackgroundProvider>
+      <div className="mb-6 flex items-center justify-end">
+        <BgToggleButton />
+      </div>
+
       <div
         className={
           stories && stories.length > 1
@@ -21,10 +25,6 @@ export default function StoryListClient({
             : "space-y-8"
         }
       >
-        <div className="mb-6 flex items-center justify-end">
-          <BgToggleButton />
-        </div>
-
         {(stories as Story[] | null)?.map((story) => (
           <StoryCard key={story.id} story={story}>
             {(story.title || story.author) && (
