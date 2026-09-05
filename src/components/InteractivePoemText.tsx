@@ -37,6 +37,7 @@ function speakChinese(text: string) {
 
 export default function InteractivePoemText({ chineseText, pinyin }: Props) {
   const [activeLineIndex, setActiveLineIndex] = useState<number | null>(null);
+  const [compactRows, setCompactRows] = useState(false);
   const chineseLines = chineseText.split("\n").filter(Boolean);
   const pinyinLines = pinyin?.split("\n").filter(Boolean) ?? [];
 
@@ -54,6 +55,7 @@ export default function InteractivePoemText({ chineseText, pinyin }: Props) {
       {/* Global Play and Stop Audio Controls */}
       <div className="flex justify-center gap-3">
         <button
+          type="button"
           onClick={() => speakChinese(fullPoemText)}
           className="flex items-center gap-2 rounded-xl bg-red-600 px-5 py-2.5 font-semibold text-white shadow-md transition hover:bg-purple-700 active:scale-95"
         >
@@ -61,15 +63,28 @@ export default function InteractivePoemText({ chineseText, pinyin }: Props) {
         </button>
 
         <button
+          type="button"
           onClick={stopReading}
           className="rounded-xl border border-gray-300 bg-white px-5 py-2.5 font-semibold text-gray-700 shadow-sm transition hover:bg-gray-50 active:scale-95"
         >
           停止朗读
         </button>
+
+        <button
+          type="button"
+          onClick={() => setCompactRows((current) => !current)}
+          className="rounded-xl border border-red-200 bg-red-50 px-4 py-2.5 font-semibold text-red-700 shadow-sm transition hover:bg-red-100 active:scale-95"
+        >
+          {compactRows ? "恢复行距" : "缩小行距"}
+        </button>
       </div>
 
       {/* Poem Lines Layout */}
-      <div className="space-y-6 text-center">
+      <div
+        className={
+          compactRows ? "space-y-0 text-center" : "space-y-6 text-center"
+        }
+      >
         {chineseLines.map((line, lineIndex) => {
           const chars = line.split("");
           const pinyinWords = pinyinLines[lineIndex]?.split(" ") ?? [];
