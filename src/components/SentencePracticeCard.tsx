@@ -125,7 +125,7 @@ export default function SentencePracticeCard({
         <div className="flex flex-wrap gap-2">
           <button
             type="button"
-            onClick={() => setShowFillGame((c) => !c)}
+            onClick={() => setShowFillGame(true)}
             className="rounded-full border border-purple-200 bg-purple-50 px-4 py-2.5 text-sm font-bold text-purple-700 shadow-sm transition hover:bg-purple-100"
           >
             Fill-in Game / 填空游戏
@@ -254,7 +254,31 @@ export default function SentencePracticeCard({
         <p className="mb-2 text-center text-gray-800">{english}</p>
       )}
       {showFillGame && (
-        <FillBlankGame sentence={chinese} pinyin={pinyin ?? undefined} />
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/35 p-4 backdrop-blur-sm"
+          onClick={() => setShowFillGame(false)}
+        >
+          <div
+            className="max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-3xl border border-gray-200 bg-white p-5 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="mb-4 flex items-center justify-between gap-3">
+              <h3 className="text-xl font-bold text-purple-700">
+                Fill-in-the-blank game / 填空游戏
+              </h3>
+
+              <button
+                type="button"
+                onClick={() => setShowFillGame(false)}
+                className="rounded-full border border-gray-200 bg-gray-50 px-3 py-1.5 text-sm font-semibold text-gray-700 hover:bg-gray-100"
+              >
+                Close / 关闭
+              </button>
+            </div>
+
+            <FillBlankGame sentence={chinese} pinyin={pinyin ?? undefined} />
+          </div>
+        </div>
       )}
     </article>
   );
