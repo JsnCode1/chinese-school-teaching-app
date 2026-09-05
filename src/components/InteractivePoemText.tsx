@@ -104,9 +104,7 @@ export default function InteractivePoemText({ chineseText, pinyin }: Props) {
                 setActiveLineIndex(lineIndex);
                 speakChinese(line);
               }}
-              className={`block w-full rounded-2xl p-3 text-center transition ${
-                isActive ? "bg-red-50" : "hover:bg-red-50"
-              }`}
+              className="mx-auto inline-block max-w-full rounded-2xl p-3 text-center transition"
             >
               <div className="inline-flex flex-wrap justify-center gap-4 rounded-xl px-2 py-1">
                 {chars.map((char, charIndex) => {
@@ -132,12 +130,12 @@ export default function InteractivePoemText({ chineseText, pinyin }: Props) {
                       key={charIndex}
                       className="flex flex-col items-center"
                     >
-                      <span className="text-base font-medium text-purple-600">
+                      <span className="text-base font-medium text-red-600">
                         {charPinyin}
                       </span>
 
                       <span
-                        className={`text-4xl font-bold text-gray-900 ${
+                        className={`text-4xl font-bold text-gray-900 transition-colors ${
                           isActive
                             ? "underline decoration-red-500 decoration-4 underline-offset-8"
                             : ""

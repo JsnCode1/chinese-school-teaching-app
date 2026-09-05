@@ -103,7 +103,13 @@ export default function FillBlankGame({
 
     const blanks = chars.map((c, i) => (blankSet.has(i) ? "" : c));
 
-    const tiles = toRemove.map((i, idx) => ({
+    const shuffled = [...toRemove];
+    for (let i = shuffled.length - 1; i > 0; i -= 1) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+
+    const tiles = shuffled.map((i, idx) => ({
       id: `${i}-${seed}-${idx}`,
       char: chars[i],
     }));
