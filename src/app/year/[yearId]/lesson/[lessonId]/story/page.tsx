@@ -1,25 +1,7 @@
-import { default as nextDynamic } from "next/dynamic";
 import BackLink from "@/components/BackLink";
 import { supabase } from "@/lib/supabase";
 import type { Story } from "@/lib/types";
-
-const InteractiveStoryText = nextDynamic(
-  () => import("@/components/InteractiveStoryText"),
-  {
-    loading: () => (
-      <div className="py-10 text-center">Loading story reader...</div>
-    ),
-  },
-);
-
-const InteractivePoemText = nextDynamic(
-  () => import("@/components/InteractivePoemText"),
-  {
-    loading: () => (
-      <div className="py-10 text-center">Loading poem reader...</div>
-    ),
-  },
-);
+import StoryListClient from "@/components/StoryListClient";
 
 export const dynamic = "force-dynamic";
 
@@ -66,72 +48,7 @@ export default async function StoryPage({
           )}
         </div>
 
-        <div
-          className={
-            stories && stories.length > 1
-              ? "grid gap-8 lg:grid-cols-2"
-              : "space-y-8"
-          }
-        >
-          {(stories as Story[] | null)?.map((story) => (
-            <div
-              key={story.id}
-              className="relative overflow-hidden rounded-3xl bg-white p-8 shadow-lg"
-            >
-              {story.image_path && (
-                <div
-                  className="absolute inset-0 opacity-20"
-                  style={{
-                    backgroundImage: `url(${story.image_path})`,
-                    backgroundSize: "contain",
-                    backgroundPosition: "right center",
-                    backgroundRepeat: "no-repeat",
-                  }}
-                />
-              )}
-
-              <div className="relative z-10">
-                {(story.title || story.author) && (
-                  <div className="mb-8 text-center">
-                    {story.title && (
-                      <h2 className="text-4xl font-extrabold text-red-700">
-                        {story.title}
-                      </h2>
-                    )}
-
-                    {story.author && (
-                      <p className="mt-2 text-xl font-bold text-gray-500">
-                        {story.author}
-                      </p>
-                    )}
-                  </div>
-                )}
-
-                {story.text_format === "poem" ? (
-                  <InteractivePoemText
-                    chineseText={story.chinese_text}
-                    pinyin={story.pinyin}
-                  />
-                ) : (
-                  <InteractiveStoryText
-                    chineseText={story.chinese_text}
-                    pinyin={story.pinyin}
-                  />
-                )}
-
-                <div className="mt-10 rounded-2xl bg-green-50/90 p-4">
-                  <h2 className="mb-2 text-lg font-bold text-green-700">
-                    English Translation
-                  </h2>
-
-                  <p className="text-lg text-gray-700">
-                    {story.english_translation}
-                  </p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+        <StoryListClient stories={stories as Story[] | null} />
       </section>
     </main>
   );
