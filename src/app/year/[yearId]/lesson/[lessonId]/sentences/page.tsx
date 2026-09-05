@@ -29,7 +29,7 @@ export default async function SentencesPage({
           />
 
           <h1 className="mb-8 text-4xl font-bold text-red-700">
-            Short Sentences 短句
+            {"Short Sentences 短句 (点击“填空游戏”即可开始游戏)"}
           </h1>
 
           <div className="flex min-h-[320px] items-center justify-center">

@@ -79,7 +79,7 @@ export default async function LessonOverviewPage({
 
           <OptionCard
             title="Short Sentences"
-            description="Read and practise simple sentences."
+            description="Read and practise simple sentences.(页面可点击“填空游戏”即可开始游戏)"
             href={`/year/${yearId}/lesson/${lessonId}/sentences`}
             emoji="句子"
           />

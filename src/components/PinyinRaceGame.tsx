@@ -12,7 +12,7 @@ function shuffleArray<T>(array: T[]) {
 
 const DEFAULT_QUESTIONS_PER_GAME = 10;
 const BOT_PROGRESS_PER_TICK = 4; // SPEED CONTROL: bigger = bot moves more each tick
-const BOT_TICK_MS = 1800; // SPEED CONTROL: smaller = bot moves more often
+const BOT_TICK_MS = 1900; // SPEED CONTROL: smaller = bot moves more often
 
 export default function PinyinRaceGame({
   characters,
