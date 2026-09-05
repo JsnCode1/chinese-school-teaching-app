@@ -1,5 +1,5 @@
 "use client";
-
+// Change block w-fit to inline-block for xxx,xxx structure rather than row row structure.
 import { useEffect, useState } from "react";
 
 type Props = {
@@ -57,7 +57,7 @@ export default function InteractivePoemText({ chineseText, pinyin }: Props) {
         <button
           type="button"
           onClick={() => speakChinese(fullPoemText)}
-          className="flex items-center gap-2 rounded-xl bg-red-600 px-5 py-2.5 font-semibold text-white shadow-md transition hover:bg-purple-700 active:scale-95"
+          className="flex items-center gap-2 rounded-xl bg-red-600 px-5 py-2.5 font-semibold text-white shadow-md transition hover:bg-red-700 active:scale-95"
         >
           读全诗
         </button>
@@ -104,7 +104,8 @@ export default function InteractivePoemText({ chineseText, pinyin }: Props) {
                 setActiveLineIndex(lineIndex);
                 speakChinese(line);
               }}
-              className="mx-auto inline-block max-w-full rounded-2xl p-3 text-center transition"
+              // Change block w-fit to inline-block for xxx,xxx structure rather than row row structure.
+              className="mx-auto block w-fit max-w-full rounded-2xl p-3 text-center transition"
             >
               <div className="inline-flex flex-wrap justify-center gap-4 rounded-xl px-2 py-1">
                 {chars.map((char, charIndex) => {

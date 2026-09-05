@@ -95,8 +95,8 @@ const HanziStrokeWriter = forwardRef<HanziStrokeWriterRef, Props>(
         padding: 20,
         showOutline: true,
         showCharacter: !forceHideCharacter,
-        strokeAnimationSpeed: 1,
-        delayBetweenStrokes: 180,
+        strokeAnimationSpeed: 0.66,
+        delayBetweenStrokes: 190,
         radicalColor: highlightRadical ? "#FF0000" : undefined,
       };
 
