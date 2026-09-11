@@ -7,6 +7,10 @@ type Props = {
   pinyin: string | null;
 };
 
+function stripSpeechPunctuation(text: string) {
+  return text.replace(/[，。！？；：、,.!?;:…（）()“”\"\u00A0]/g, "").trim();
+}
+
 function stopReading() {
   if (typeof window !== "undefined" && window.speechSynthesis) {
     window.speechSynthesis.cancel();
@@ -14,7 +18,10 @@ function stopReading() {
 }
 
 function speakChinese(text: string) {
-  const utterance = new SpeechSynthesisUtterance(text);
+  const cleanText = stripSpeechPunctuation(text);
+  if (!cleanText) return;
+
+  const utterance = new SpeechSynthesisUtterance(cleanText);
 
   const voices = window.speechSynthesis.getVoices();
 
