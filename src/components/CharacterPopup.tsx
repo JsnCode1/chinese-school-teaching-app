@@ -26,10 +26,17 @@ export default function CharacterPopup({ character, onClose }: Props) {
   const [hwReady, setHwReady] = useState(false);
   const [hwHasNext, setHwHasNext] = useState(false);
 
+  function stripSpeechPunctuation(text: string) {
+    return text.replace(/[，。！？；：、,.!?;:…（）()“”\"\u00A0]/g, "").trim();
+  }
+
   function speakChinese(text: string) {
     if (typeof window === "undefined" || !window.speechSynthesis) return;
 
-    const utterance = new SpeechSynthesisUtterance(text);
+    const cleanText = stripSpeechPunctuation(text);
+    if (!cleanText) return;
+
+    const utterance = new SpeechSynthesisUtterance(cleanText);
     const voices = window.speechSynthesis.getVoices();
     const preferredVoice =
       voices.find(

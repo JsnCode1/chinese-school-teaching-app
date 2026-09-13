@@ -9,6 +9,10 @@ type Props = {
   english?: string | null;
 };
 
+function stripSpeechPunctuation(text: string) {
+  return text.replace(/[，。！？；：、,.!?;:…（）()“”\"\u00A0]/g, "").trim();
+}
+
 function normalizePinyin(input: string | null | undefined) {
   return (
     input
@@ -71,9 +75,12 @@ export default function SentencePracticeCard({
   function speakChinese(text: string) {
     if (typeof window === "undefined" || !window.speechSynthesis) return;
 
+    const cleanText = stripSpeechPunctuation(text);
+    if (!cleanText) return;
+
     stopReading();
 
-    utteranceRef.current = new SpeechSynthesisUtterance(text);
+    utteranceRef.current = new SpeechSynthesisUtterance(cleanText);
     utteranceRef.current.lang = "zh-CN";
     utteranceRef.current.rate = 0.67;
 
