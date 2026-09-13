@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import type { CharacterItem } from "@/lib/types";
 import type { HanziStrokeWriterRef } from "@/components/HanziStrokeWriter";
 
@@ -12,6 +12,8 @@ const HanziStrokeWriter = dynamic<any>(
   },
 );
 
+const BUTTON_POSITION_STORAGE_KEY = "characterPopupButtonsOnLeft";
+
 type Props = {
   character: CharacterItem;
   onClose: () => void;
@@ -21,10 +23,22 @@ export default function CharacterPopup({ character, onClose }: Props) {
   const [showPinyin, setShowPinyin] = useState(false);
   const [strokeAnimationCount, setStrokeAnimationCount] = useState(0);
   const [highlightRadical, setHighlightRadical] = useState(false);
+  const [buttonsOnLeft, setButtonsOnLeft] = useState(() => {
+    if (typeof window === "undefined") return false;
+
+    return localStorage.getItem(BUTTON_POSITION_STORAGE_KEY) === "left";
+  });
 
   const hwRef = useRef<HanziStrokeWriterRef | null>(null);
   const [hwReady, setHwReady] = useState(false);
   const [hwHasNext, setHwHasNext] = useState(false);
+
+  useEffect(() => {
+    localStorage.setItem(
+      BUTTON_POSITION_STORAGE_KEY,
+      buttonsOnLeft ? "left" : "right",
+    );
+  }, [buttonsOnLeft]);
 
   function stripSpeechPunctuation(text: string) {
     return text.replace(/[，。！？；：、,.!?;:…（）()“”\"\u00A0]/g, "").trim();
@@ -64,8 +78,18 @@ export default function CharacterPopup({ character, onClose }: Props) {
         onClick={(event) => event.stopPropagation()}
         className="flex max-h-[95vh] w-full max-w-6xl flex-col gap-4 overflow-y-auto rounded-[2rem] bg-gradient-to-br from-slate-50 to-orange-50 p-6 shadow-2xl"
       >
-        <div className="flex justify-end">
+        <div className="flex justify-between gap-3">
           <button
+            type="button"
+            onClick={() => setButtonsOnLeft((current) => !current)}
+            aria-pressed={buttonsOnLeft}
+            className="rounded-full bg-white px-4 py-2 text-sm font-bold text-gray-600 shadow transition hover:text-red-600"
+          >
+            {buttonsOnLeft ? "按钮移到右侧" : "按钮移到左侧"}
+          </button>
+
+          <button
+            type="button"
             onClick={onClose}
             className="rounded-full bg-white px-5 py-2 text-2xl font-bold text-gray-500 shadow transition hover:text-red-600"
           >
@@ -73,7 +97,11 @@ export default function CharacterPopup({ character, onClose }: Props) {
           </button>
         </div>
 
-        <div className="flex flex-col gap-8 md:flex-row">
+        <div
+          className={`flex flex-col gap-8 md:flex-row ${
+            buttonsOnLeft ? "md:flex-row-reverse" : ""
+          }`}
+        >
           <div className="flex flex-1 items-center justify-center">
             <div className="relative flex h-[550px] w-[550px] max-w-full flex-shrink-0 flex-col items-center justify-center border-4 border-slate-400 bg-white shadow-lg">
               {/* Background practice grid lines */}
