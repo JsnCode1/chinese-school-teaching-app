@@ -153,6 +153,28 @@ const guideSections: Array<{
     },
   },
   {
+    icon: "🎯",
+    title: { en: "Pinyin Hangman", zh: "猜拼音" },
+    summary: {
+      en: "Guess the letters in a character's pinyin using its meaning as a clue.",
+      zh: "根据汉字的意思猜出拼音字母。",
+    },
+    tips: {
+      en: [
+        "Open the Games card from the lesson overview.",
+        "Choose Pinyin Hangman and read the meaning clue.",
+        "Select letters to complete the pinyin before you run out of mistakes.",
+        "Use Next Character to continue practising with another lesson character.",
+      ],
+      zh: [
+        "从课程首页打开“游戏”卡片。",
+        "选择“猜拼音”并阅读意思提示。",
+        "选择字母拼出拼音，在错误次数用完前完成。",
+        "点击“下一个汉字”继续练习其他汉字。",
+      ],
+    },
+  },
+  {
     icon: "🏎️",
     title: { en: "Race Game", zh: "赛车" },
     summary: {

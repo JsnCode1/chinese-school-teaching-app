@@ -29,6 +29,12 @@ export default async function GamesPage({
             emoji="对一对"
           />
           <OptionCard
+            title="Pinyin Hangman"
+            description="Guess the pinyin letters from the character meaning."
+            href={`/year/${yearId}/lesson/${lessonId}/games/hangman`}
+            emoji="猜一猜"
+          />
+          <OptionCard
             title="Fill-in-the-blank"
             description="Complete the missing characters in the lesson sentences."
             href={`/year/${yearId}/lesson/${lessonId}/games/fill-in`}
