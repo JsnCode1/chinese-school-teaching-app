@@ -99,16 +99,36 @@ const guideSections: Array<{
       en: [
         "Each card shows the sentence in Chinese, pinyin, and English.",
         "Use Hide text, Hide pinyin, and Hide English to focus on one part at a time.",
-        "Click Fill-in Game to practise completing the sentence.",
         "Click the sentence or Read whole sentence to hear it spoken; punctuation is not read aloud.",
         "Use Stop reading to end the current pronunciation.",
       ],
       zh: [
         "每张卡片都会显示中文、拼音和英文翻译。",
         "使用“隐藏文字”“隐藏拼音”和“隐藏英文”可以一次专注练习一个部分。",
-        "点击“填空游戏”可以练习完成句子。",
         "点击句子或“读全句子”可以听朗读，朗读时不会读出标点符号。",
         "点击“停止朗读”可以结束当前朗读。",
+      ],
+    },
+  },
+  {
+    icon: "🧩",
+    title: { en: "Fill-in-the-blank Game", zh: "填空游戏" },
+    summary: {
+      en: "Complete the missing characters in the lesson's short sentences. This game is separate from the Short Sentences reading page.",
+      zh: "完成课文短句中缺少的汉字。这个游戏与短句阅读页面分开。",
+    },
+    tips: {
+      en: [
+        "Open the Games card from the lesson overview.",
+        "Choose Fill-in-the-blank to start the game.",
+        "Place the character tiles into the matching blanks in each sentence.",
+        "Use the pinyin shown in the game to help with pronunciation.",
+      ],
+      zh: [
+        "从课程首页打开“游戏”卡片。",
+        "选择“填空游戏”开始游戏。",
+        "把汉字卡片放入每个句子中对应的空格。",
+        "参考游戏中显示的拼音来帮助发音。",
       ],
     },
   },

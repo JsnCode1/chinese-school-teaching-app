@@ -38,8 +38,8 @@ export default async function RacePage({
     <main className="min-h-screen bg-orange-50 p-3 md:p-5">
       <section className="mx-auto w-full max-w-[95vw]">
         <BackLink
-          href={`/year/${yearId}/lesson/${lessonId}`}
-          label="Back to lesson"
+          href={`/year/${yearId}/lesson/${lessonId}/games`}
+          label="Back to games"
         />
 
         <PinyinRaceGame

@@ -79,27 +79,16 @@ export default async function LessonOverviewPage({
 
           <OptionCard
             title="Short Sentences"
-            description="Read and practise simple sentences.(页面可点击“填空游戏”即可开始游戏)"
+            description="Read and practise the lesson's short sentences."
             href={`/year/${yearId}/lesson/${lessonId}/sentences`}
             emoji="句子"
           />
+
           <OptionCard
             title="Games"
-            description="Match pinyin to the correct Chinese characters."
+            description="Open all the lesson games in one place."
             href={`/year/${yearId}/lesson/${lessonId}/games`}
-            emoji="对一对"
-          />
-          <OptionCard
-            title="Racing Game"
-            description="Race the bot by choosing the correct character."
-            href={`/year/${yearId}/lesson/${lessonId}/race`}
-            emoji="赛车"
-          />
-          <OptionCard
-            title="Writer Quiz"
-            description="Draw the character that matches the pinyin."
-            href={`/year/${yearId}/lesson/${lessonId}/writer-quiz`}
-            emoji="写字"
+            emoji="游戏 （所有游戏）"
           />
         </div>
       </section>
