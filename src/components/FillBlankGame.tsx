@@ -102,10 +102,8 @@ export default function FillBlankGame({
       if (maxCount <= minCount) {
         effectiveRemoveCount = maxCount;
       } else {
-        const pseudo = ((seed * 9301 + 49297) % 233280) / 233280;
-
         effectiveRemoveCount =
-          Math.floor(pseudo * (maxCount - minCount + 1)) + minCount;
+          Math.floor(Math.random() * (maxCount - minCount + 1)) + minCount;
       }
     }
 
