@@ -18,7 +18,8 @@ export default async function GamesPage({
 
         <h1 className="mb-3 text-5xl font-bold text-red-700">Games 游戏</h1>
         <p className="mb-8 text-lg text-gray-600">
-          Choose a game to practise this lesson.
+          Choose from Pinyin Match, Pinyin Hangman, Fill-in-the-blank, Racing
+          Game, or Writer Quiz.
         </p>
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">

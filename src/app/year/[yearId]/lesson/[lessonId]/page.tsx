@@ -86,7 +86,7 @@ export default async function LessonOverviewPage({
 
           <OptionCard
             title="Games"
-            description="Open all the lesson games in one place."
+            description="Pinyin Match, Pinyin Hangman, Fill-in-the-blank, Racing Game, and Writer Quiz."
             href={`/year/${yearId}/lesson/${lessonId}/games`}
             emoji="游戏 （所有游戏）"
           />

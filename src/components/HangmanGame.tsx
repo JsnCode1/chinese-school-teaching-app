@@ -3,7 +3,12 @@
 import { useEffect, useState } from "react";
 import type { CharacterItem } from "@/lib/types";
 
-const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+const alphabeticalKeys = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+const qwertyRows = [
+  "QWERTYUIOP".split(""),
+  "ASDFGHJKL".split(""),
+  "ZXCVBNM".split(""),
+];
 const maxMistakes = 6;
 
 function normalizePinyin(value: string) {
@@ -144,6 +149,9 @@ export default function HangmanGame({
   const [characterIndex, setCharacterIndex] = useState(0);
   const [guessedLetters, setGuessedLetters] = useState<string[]>([]);
   const [pickerOpen, setPickerOpen] = useState(false);
+  const [keyboardLayout, setKeyboardLayout] = useState<
+    "alphabetical" | "qwerty"
+  >("alphabetical");
 
   const current = characters[characterIndex];
   const displayLetters = current ? getPinyinLetters(current.pinyin) : [];
@@ -158,6 +166,8 @@ export default function HangmanGame({
     [...new Set(answer)].every((letter) => guessedLetters.includes(letter));
   const isLost = wrongGuesses.length >= maxMistakes;
   const gameOver = isComplete || isLost;
+  const keyboardRows =
+    keyboardLayout === "qwerty" ? qwertyRows : [alphabeticalKeys];
 
   useEffect(() => {
     setGuessedLetters([]);
@@ -281,29 +291,66 @@ export default function HangmanGame({
             </p>
           )}
 
-          <div className="grid grid-cols-7 gap-2 sm:grid-cols-9">
-            {alphabet.map((letter) => {
-              const isGuessed = guessedLetters.includes(letter);
-              const isCorrect = answer.includes(letter);
+          <div className="mb-4 flex flex-wrap items-center justify-center gap-2">
+            <span className="mr-1 text-sm font-bold text-gray-600">
+              Keyboard:
+            </span>
+            {(["alphabetical", "qwerty"] as const).map((layout) => (
+              <button
+                key={layout}
+                type="button"
+                onClick={() => setKeyboardLayout(layout)}
+                className={`rounded-full px-4 py-2 text-sm font-bold transition ${
+                  keyboardLayout === layout
+                    ? "bg-blue-600 text-white"
+                    : "bg-white text-gray-700 shadow-sm hover:bg-yellow-100"
+                }`}
+              >
+                {layout === "alphabetical" ? "A-Z" : "QWERTY"}
+              </button>
+            ))}
+          </div>
 
-              return (
-                <button
-                  key={letter}
-                  type="button"
-                  disabled={gameOver || isGuessed}
-                  onClick={() => guessLetter(letter)}
-                  className={`rounded-xl px-2 py-3 font-bold transition ${
-                    isGuessed
-                      ? isCorrect
-                        ? "bg-green-200 text-green-800"
-                        : "bg-red-200 text-red-800"
-                      : "bg-white text-gray-800 shadow-sm hover:bg-yellow-100"
-                  } disabled:cursor-not-allowed disabled:opacity-80`}
-                >
-                  {letter}
-                </button>
-              );
-            })}
+          <div
+            className={
+              keyboardLayout === "alphabetical"
+                ? "grid grid-cols-7 gap-2 sm:grid-cols-9"
+                : "space-y-2"
+            }
+          >
+            {keyboardRows.map((row, rowIndex) => (
+              <div
+                key={`${keyboardLayout}-${rowIndex}`}
+                className={
+                  keyboardLayout === "qwerty"
+                    ? "flex justify-center gap-1.5 sm:gap-2"
+                    : "contents"
+                }
+              >
+                {row.map((letter) => {
+                  const isGuessed = guessedLetters.includes(letter);
+                  const isCorrect = answer.includes(letter);
+
+                  return (
+                    <button
+                      key={letter}
+                      type="button"
+                      disabled={gameOver || isGuessed}
+                      onClick={() => guessLetter(letter)}
+                      className={`h-11 min-w-8 rounded-xl px-2 font-bold transition sm:h-12 sm:min-w-10 ${
+                        isGuessed
+                          ? isCorrect
+                            ? "bg-green-200 text-green-800"
+                            : "bg-red-200 text-red-800"
+                          : "bg-white text-gray-800 shadow-sm hover:bg-yellow-100"
+                      } disabled:cursor-not-allowed disabled:opacity-80`}
+                    >
+                      {letter}
+                    </button>
+                  );
+                })}
+              </div>
+            ))}
           </div>
 
           <div className="mt-6 flex flex-wrap justify-center gap-3">
